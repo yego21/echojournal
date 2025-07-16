@@ -1,0 +1,75 @@
+
+<h2>EchoJournal Dashboard</h2>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>EchoJournal</title>
+  <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+</head>
+<body>
+  <h1>🪞 EchoJournal</h1>
+
+  <form 
+    method="POST" 
+    hx-post="{% url 'journal_entry' %}" 
+    hx-target="#entry-list" 
+    hx-swap="innerHTML"
+  >
+    {% csrf_token %}
+
+    <label for="id_date">Date:</label><br>
+    {{ form.date }}<br><br>
+
+    <label for="id_start_entry">Start of Day:</label><br>
+    {{ form.start_entry }}<br><br>
+
+    <label for="id_midday_entry">Midday:</label><br>
+    {{ form.midday_entry }}<br><br>
+
+    <label for="id_end_entry">End of Day:</label><br>
+    {{ form.end_entry }}<br><br>
+
+    <button type="submit" name="submit_entry">✅ Submit Entry</button>
+    <button type="button"
+  hx-get="{% url 'synthesize_entries' %}"
+  hx-target="#synthesis"
+  hx-swap="innerHTML">
+  🧠 Synthesize
+</button>
+
+    <button type="button" onclick="clearForm()">🧹 Clear</button>
+  </form>
+
+  <div id="success-message">
+    {% if messages %}
+      {% for message in messages %}
+        <p style="color: green;">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  <hr>
+
+  <div id="entry-list">
+    {% include 'journal/_entries.html' %}
+  </div>
+
+  <hr>
+
+  <div id="synthesis">
+    {% if synthesis %}
+      <h2>🧠 Insight Summary</h2>
+      <p>{{ synthesis }}</p>
+    {% endif %}
+  </div>
+
+  <script>
+    function clearForm() {
+      const form = document.querySelector('form');
+      form.reset();
+      document.getElementById('synthesis').innerHTML = '';
+      document.getElementById('success-message').innerHTML = '';
+    }
+  </script>
+</body>
+</html>

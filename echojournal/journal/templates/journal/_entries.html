@@ -1,0 +1,8 @@
+{% for entry in entries %}
+    <p><strong>{{ entry.date }}</strong><br>
+    Start: {{ entry.start_entry }}<br>
+    Midday: {{ entry.midday_entry }}<br>
+    End: {{ entry.end_entry }}</p>
+{% empty %}
+    <p>No entries yet.</p>
+{% endfor %}
