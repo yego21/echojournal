@@ -5,17 +5,16 @@ from datetime import date
 class JournalEntryForm(forms.ModelForm):
     class Meta:
         model = JournalEntry
-        fields = ['date', 'start_entry', 'midday_entry', 'end_entry']
+        fields = ['content']
         widgets = {
-            'date': forms.DateInput(attrs={
-                'type': 'date',
+            'content': forms.Textarea(attrs={
+                'rows': 3,
                 'class': 'form-control',
+                'placeholder': 'Write your journal entry here...'
             }),
-            'start_entry': forms.Textarea(attrs={'rows': 2}),
-            'midday_entry': forms.Textarea(attrs={'rows': 2}),
-            'end_entry': forms.Textarea(attrs={'rows': 2}),
         }
 
     def __init__(self, *args, **kwargs):
-        super(JournalEntryForm, self).__init__(*args, **kwargs)
-        self.fields['date'].initial = date.today()
+        super().__init__(*args, **kwargs)
+        self.fields['content'].label = ''
+

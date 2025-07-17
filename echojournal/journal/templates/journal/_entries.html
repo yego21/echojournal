@@ -1,8 +1,29 @@
+{% if can_add %}
+  <div class="alert alert-info mt-3">
+    You can still write {{ 3|add:"-entries|length" }} more entries today.
+  </div>
+{% else %}
+  <div class="alert alert-warning mt-3">
+    You’ve reached your daily limit of 3 entries.
+  </div>
+{% endif %}
+
+
 {% for entry in entries %}
-    <p><strong>{{ entry.date }}</strong><br>
-    Start: {{ entry.start_entry }}<br>
-    Midday: {{ entry.midday_entry }}<br>
-    End: {{ entry.end_entry }}</p>
+  <div class="card mb-3">
+    <div class="card-body">
+      <h5 class="card-title">Entry {{ forloop.counter }}</h5>
+      <p class="card-text">{{ entry.content|linebreaks }}</p>
+      <p class="text-muted small">Created: {{ entry.created_at|date:"Y-m-d H:i" }}</p>
+      {% if entry.tags %}
+        <div>
+          <strong>Tags:</strong>
+          <span class="badge bg-secondary">{{ entry.tags }}</span>
+        </div>
+      {% endif %}
+    </div>
+  </div>
 {% empty %}
-    <p>No entries yet.</p>
+  <p class="text-muted">No entries yet. Start journaling today!</p>
 {% endfor %}
+
