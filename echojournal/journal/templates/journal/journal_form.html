@@ -1,73 +1,44 @@
+<form 
+  x-data="{ showModal: false }" 
+  x-ref="journalForm"
+  id="journal-form"
+  method="POST" 
+  hx-post="{% url 'new_journal_entry' %}" 
+  hx-target="#entry-list" 
+  hx-swap="innerHTML"
+  class="space-y-4 bg-white p-6 shadow rounded"
+>
+  {% csrf_token %}
+  {{ form.as_p }}
 
-
-<!DOCTYPE html>
-<html>
-<head>
-  <title>EchoJournal</title>
-  <script src="https://unpkg.com/htmx.org@1.9.2"></script>
-</head>
-<body>
-  <h1>🪞 EchoJournal</h1>
-
-  <div class="container mt-5">
-
-  <!-- Entry Form -->
-  <form 
-    id="journal-form"
-    method="POST" 
-    hx-post="{% url 'new_journal_entry' %}" 
-    hx-target="#entry-list" 
-    hx-swap="innerHTML"
+  <!-- Visible Submit Button triggers modal -->
+  <button 
+    type="button"
+    @click="showModal = true"
+    class="bg-blue-600 text-white px-4 py-2 rounded"
   >
-    {% csrf_token %}
-    {{ form.as_p }}
+    Submit
+  </button>
 
-    <button 
-      type="submit" 
-      class="btn btn-primary" 
-      name="submit_entry"
-      hx-disable="true"
-    >
-      Add Entry
-    </button>
-  </form>
-      <div id="journal-alert-zone" hx-swap-oob="true"></div>
-<div id="journal-entry-list">
-
-  <hr>
-
-  <!-- Rendered Entries -->
-  <div id="entry-list" hx-get="{% url 'journal_entries' %}" hx-trigger="load">
-    <!-- HTMX will load _entries.html here -->
+  <!-- Modal inside form -->
+  <div x-show="showModal"
+       class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+       x-transition
+  >
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+      <h2 class="text-lg font-bold mb-4">Confirm Entry</h2>
+      <p class="mb-6">Are you sure you want to submit this journal entry?</p>
+      
+      <div class="flex justify-end space-x-2">
+        <button @click="showModal = false" type="button" class="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+        <button 
+          type="button"
+          @click="$refs.journalForm.requestSubmit(); showModal = false"
+          class="px-4 py-2 bg-blue-600 text-white rounded"
+        >
+          Yes, Submit
+        </button>
+      </div>
+    </div>
   </div>
-
-</div>
-
-  
-
-  <div id="synthesis">
-    {% if synthesis %}
-      <h2>🧠 Insight Summary</h2>
-      <p>{{ synthesis }}</p>
-    {% endif %}
-  </div>
-
-
-   <button type="button"
-  hx-get="{% url 'synthesize_entries' %}"
-  hx-target="#synthesis"
-  hx-swap="innerHTML">
-  ?? Synthesize
-</button>
-
-
-  <script>
-    function clearForm() {
-      const form = document.querySelector('form');
-      form.reset();
-      document.getElementById('synthesis').innerHTML = '';
-      document.getElementById('success-message').innerHTML = '';
-    }
-  </script>
-</body>
-</html>
+</form>

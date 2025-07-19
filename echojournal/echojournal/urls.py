@@ -24,7 +24,9 @@ urlpatterns = [
     path('', views.landing_or_dashboard, name='landing_or_dashboard'),
     path('admin/', admin.site.urls),
     path('login/', auth_views.LoginView.as_view(template_name='user_management/login.html'), name='login'),
-    path('logout/', logout_view, name='logout'),
+    path('logout/', views.logout_view, name='logout'),
     path('signup/', views.signup_view, name='signup'),
     path('journal/', include('journal.urls')),
+    path('set-timezone/', views.set_timezone, name='set-timezone'),
+
 ]

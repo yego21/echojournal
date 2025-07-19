@@ -1,0 +1,13 @@
+{% if entries %}
+  <div class="grid gap-4">
+    {% for entry in entries %}
+      <div class="border p-4 rounded shadow bg-white">
+        <p class="text-gray-700">{{ entry.label }}</p>
+        <p class="text-sm text-gray-500">{{ entry.timestamp }}</p>
+        <p class="mt-2">{{ entry.content }}</p>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p class="text-gray-500">No entries found for the selected date.</p>
+{% endif %}
