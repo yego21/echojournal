@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import JournalEntry
+from .models import JournalEntry, JournalMode
 
 
 @admin.register(JournalEntry)
@@ -11,3 +11,8 @@ class JournalEntryAdmin(admin.ModelAdmin):
     def short_content(self, obj):
         return obj.content[:50] + ('...' if len(obj.content) > 50 else '')
     short_content.short_description = 'Content Preview'
+
+@admin.register(JournalMode)
+class JournalModeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'is_premium', 'is_active', 'created_at')
+    list_filter = ('is_premium', 'is_active')

@@ -3,7 +3,7 @@ import json
 import pytz
 from django.shortcuts import render, redirect
 from .forms import JournalEntryForm
-from .models import JournalEntry
+from .models import JournalEntry, JournalMode
 from django.template.loader import render_to_string
 from django.http import HttpResponse
 # from openai import OpenAI
@@ -18,8 +18,9 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.utils.timezone import now, localtime
 from django.template.loader import render_to_string
 from django.utils.dateparse import parse_date
-from django.utils import timezone
+from django.utils import timezone as dj_timezone
 from datetime import datetime, time
+from pytz import timezone, UTC
 
 
 def generate_summary(entries):
@@ -82,23 +83,36 @@ def extract_tags(entries):
 
  # Assumes you have a helper to tag entries
 
-def get_user_timezone(user):
-    if hasattr(user, "userprofile") and user.userprofile.timezone:
-        return pytz.timezone(user.userprofile.timezone)
-    return pytz.UTC  # fallback
+def get_session_timezone(request):
+    tzname = request.session.get('timezone')
+    if tzname in pytz.all_timezones:
+        return timezone(tzname)
+    return UTC
 
 # 1. MAIN DASHBOARD VIEW
 @login_required
 def journal_entry(request):
     form = JournalEntryForm()
     entries = JournalEntry.objects.filter(user=request.user).order_by('-created_at')[:5]
-    user_timezone = str(get_user_timezone(request.user))
+    session_timezone = get_session_timezone(request)
     return render(request, 'dashboard.html', {
         'form': form,
         'entries': entries,
-        'user_timezone': user_timezone,
+        'user_timezone': str(session_timezone),  # Show it in the template
     })
 
+
+@login_required
+def select_mode(request):
+    modes = JournalMode.objects.all()
+    if request.method == "POST":
+        selected_mode_id = request.POST.get("mode_id")
+        profile = request.user.userprofile
+        profile.selected_mode_id = selected_mode_id
+        profile.save()
+        return redirect('journal_dashboard')
+
+    return render(request, 'journal/select_mode.html', {'modes': modes})
 
 # 2. NEW JOURNAL ENTRY VIEW (HTMX endpoint)
 @login_required
@@ -194,8 +208,8 @@ def fetch_entries_by_date(request):
     date_str = request.GET.get('entry-date')
     entry_date = datetime.strptime(date_str, "%Y-%m-%d").date()
     # Convert to full datetime before making aware
-    start_of_day = timezone.make_aware(datetime.combine(entry_date, time.min))
-    end_of_day = timezone.make_aware(datetime.combine(entry_date, time.max))
+    start_of_day = dj_timezone.make_aware(datetime.combine(entry_date, time.min))
+    end_of_day = dj_timezone.make_aware(datetime.combine(entry_date, time.max))
     # naive_dt = timezone.make_naive(date_str)
     # aware_dt = timezone.make_aware(naive_dt)
     if request.user.is_authenticated and date_str:

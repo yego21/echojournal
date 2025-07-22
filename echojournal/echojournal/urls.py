@@ -20,6 +20,8 @@ from django.contrib.auth import views as auth_views
 from . import views
 from .views import logout_view
 
+
+
 urlpatterns = [
     path('', views.landing_or_dashboard, name='landing_or_dashboard'),
     path('admin/', admin.site.urls),
@@ -28,5 +30,4 @@ urlpatterns = [
     path('signup/', views.signup_view, name='signup'),
     path('journal/', include('journal.urls')),
     path('set-timezone/', views.set_timezone, name='set-timezone'),
-
 ]

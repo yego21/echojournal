@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 import pytz
+from journal.models import JournalMode
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -14,6 +15,10 @@ class UserProfile(models.Model):
         default='UTC',
         blank=True,
         null=True,
+    )
+    selected_mode = models.ForeignKey(
+        JournalMode, null=True, blank=True, on_delete=models.SET_NULL,
+        related_name='users'
     )
 
     def __str__(self):

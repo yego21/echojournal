@@ -3,22 +3,28 @@
 {% block content %}
 <div class="max-w-3xl mx-auto px-4 py-8">
   <h2 class="text-2xl font-bold mb-6 text-center">🪞 EchoJournal Dashboard</h2>
- Your Timezone: {{ user_timezone }}
-
+<div class="mt-6">
+    <h3 class="text-lg font-semibold mb-2">Customize</h3>
+    <div class="space-y-2">
+        <a href="{% url 'journal:select_mode' %}" class="text-blue-600 hover:underline">
+            🧭 Switch Journal Mode
+        </a>
+    </div>
+</div>
   <div class="flex items-center space-x-4 mb-6">
   <input 
     type="date" 
     name="entry-date" 
     id="entry-date" 
     class="border border-gray-300 rounded px-3 py-2"
-    hx-get="{% url 'fetch_entries_by_date' %}"
+    hx-get="{% url 'journal:fetch_entries_by_date' %}"
     hx-target="#entry-list"
     hx-include="#entry-date"
     hx-trigger="change"
   >
   <button 
     class="bg-blue-600 text-white px-4 py-2 rounded"
-    hx-get="{% url 'fetch_entries_by_date' %}"
+    hx-get="{% url 'journal:fetch_entries_by_date' %}"
     hx-target="#entry-list"
     hx-include="#entry-date"
   >
@@ -36,7 +42,7 @@
     <hr class="my-6 border-gray-300">
 
     <div id="entry-list" 
-         hx-get="{% url 'journal_entries' %}" 
+         hx-get="{% url 'journal:journal_entries' %}" 
          hx-trigger="load" 
          class="space-y-4">
       <!-- HTMX loads _entries.html here -->
@@ -53,7 +59,7 @@
   <div class="mt-6 text-center">
     <button type="button"
       class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
-      hx-get="{% url 'synthesize_entries' %}"
+      hx-get="{% url 'journal:synthesize_entries' %}"
       hx-target="#synthesis"
       hx-swap="innerHTML">
       🔄 Synthesize
