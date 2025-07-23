@@ -1,3 +1,9 @@
+{% if mode.slug == "mystical" %}
+    <p class="text-indigo-200">🪐 Synthesized through cosmic alignments...</p>
+{% elif mode.slug == "philosophical" %}
+    <p class="text-yellow-200">💭 Interpreted with Stoic clarity...</p>
+{% endif %}
+
 {% if can_add %}
   <div class="alert alert-info mt-3">
     You can still write {{ 3|add:"-entries|length" }} more entries today.

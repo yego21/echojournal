@@ -1,7 +1,5 @@
 from datetime import datetime
-
 from django.utils.timezone import localtime
-
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout
@@ -10,13 +8,12 @@ import json
 from django.http import JsonResponse
 import pytz
 from django.views.decorators.csrf import csrf_exempt
-
 from journal.models import JournalEntry
 
 
 def landing_or_dashboard(request):
     if request.user.is_authenticated:
-        return redirect('journal_entry')  # Or 'dashboard'
+        return redirect('journal:journal_dashboard')  # Or 'dashboard'
     else:
         return render(request, 'landing.html')
 

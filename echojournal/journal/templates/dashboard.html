@@ -2,53 +2,81 @@
 
 {% block content %}
 <div class="max-w-3xl mx-auto px-4 py-8">
+  
+  {% if current_mode %}
+    <div class="p-2 mb-4 bg-blue-100 rounded text-sm text-blue-800">
+      Currently in: <strong>{{ current_mode.name }}</strong><br>
+      <small class="text-muted">
+    🧠 Not sure which mode fits you best?
+    <a href="{% url 'journal:mode_explorer' %}" class="link-primary">Explore the modes</a>
+</small>
+    </div>
+  {% endif %}
+
   <h2 class="text-2xl font-bold mb-6 text-center">🪞 EchoJournal Dashboard</h2>
-<div class="mt-6">
+
+  <!-- Customize section -->
+  <div class="mt-6">
     <h3 class="text-lg font-semibold mb-2">Customize</h3>
     <div class="space-y-2">
-        <a href="{% url 'journal:select_mode' %}" class="text-blue-600 hover:underline">
-            🧭 Switch Journal Mode
-        </a>
+      <a href="{% url 'journal:mode_explorer' %}" class="text-blue-600 hover:underline">
+        🧭 Switch Journal Mode
+      </a>
     </div>
-</div>
-  <div class="flex items-center space-x-4 mb-6">
-  <input 
-    type="date" 
-    name="entry-date" 
-    id="entry-date" 
-    class="border border-gray-300 rounded px-3 py-2"
-    hx-get="{% url 'journal:fetch_entries_by_date' %}"
-    hx-target="#entry-list"
-    hx-include="#entry-date"
-    hx-trigger="change"
-  >
-  <button 
-    class="bg-blue-600 text-white px-4 py-2 rounded"
-    hx-get="{% url 'journal:fetch_entries_by_date' %}"
-    hx-target="#entry-list"
-    hx-include="#entry-date"
-  >
-    View Entries
-  </button>
-</div>
+  </div>
 
-<div id="entry-list">
-  <!-- Loaded entries will go here -->
-</div>
 
+
+
+
+
+
+
+  
+  <!-- Journal Form -->
   {% include "journal/journal_form.html" %}
 
+  <!-- Filter by Date Section -->
+  <div class="mt-10 p-4 border border-gray-300 rounded bg-gray-50">
+    <h3 class="text-md font-semibold mb-2 text-gray-700">📅 View Past Entries</h3>
+    <div class="flex items-center space-x-4 mb-4">
+      <input 
+        type="date" 
+        name="entry-date" 
+        id="entry-date" 
+        class="border border-gray-300 rounded px-3 py-2"
+        hx-get="{% url 'journal:filter_entries_by_date' %}"
+        hx-target="#filtered-entry-list"
+        hx-include="#entry-date"
+        hx-trigger="change"
+      >
+      <button 
+        class="bg-blue-600 text-white px-4 py-2 rounded"
+        hx-get="{% url 'journal:filter_entries_by_date' %}"
+        hx-target="#filtered-entry-list"
+        hx-include="#entry-date"
+      >
+        View Entries
+      </button>
+    </div>
+    <div id="filtered-entry-list">
+      <!-- Loaded entries from date filter will go here -->
+    </div>
+  </div>
+
+  <!-- Daily Journal Entry List -->
   <div id="journal-entry-list" class="mt-10">
     <hr class="my-6 border-gray-300">
-
+    <h3 class="text-lg font-semibold mb-4">📝 Today's Entries</h3>
     <div id="entry-list" 
-         hx-get="{% url 'journal:journal_entries' %}" 
+         hx-get="{% url 'journal:same_day_entries' %}" 
          hx-trigger="load" 
          class="space-y-4">
       <!-- HTMX loads _entries.html here -->
     </div>
   </div>
 
+  <!-- Synthesis Section -->
   <div id="synthesis" class="mt-10">
     {% if synthesis %}
       <h2 class="text-xl font-semibold mb-2">🧠 Insight Summary</h2>
@@ -65,5 +93,6 @@
       🔄 Synthesize
     </button>
   </div>
+
 </div>
 {% endblock %}

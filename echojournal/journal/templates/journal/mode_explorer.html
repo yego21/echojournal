@@ -1,0 +1,22 @@
+<!-- templates/journal/select_mode.html -->
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- No form -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for mode in modes %}
+        <a href="{% url 'journal:journal_entry_by_mode' mode.slug %}" class="block bg-white border border-gray-200 rounded-2xl shadow-md p-6 hover:border-blue-500 transition">
+            <h2 class="text-lg font-semibold">{{ mode.name }}</h2>
+            <p class="text-sm text-gray-600 mb-4">{{ mode.description }}</p>
+
+            {% if mode.is_premium %}
+                <span class="inline-block bg-yellow-400 text-yellow-900 text-xs px-2 py-1 rounded-full uppercase font-semibold tracking-wide">Premium</span>
+            {% else %}
+                <span class="inline-block bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full uppercase font-semibold tracking-wide">Free</span>
+            {% endif %}
+        </a>
+    {% endfor %}
+</div>
+{% endblock %}
