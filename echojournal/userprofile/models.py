@@ -7,7 +7,11 @@ from journal.models import JournalMode
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    preferred_mode = models.CharField(max_length=100, default='insightful')  # Optional field
+    preferred_mode = models.ForeignKey(
+        'journal.JournalMode',
+        null=True, blank=True,
+        on_delete=models.SET_NULL
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     timezone = models.CharField(
         max_length=100,

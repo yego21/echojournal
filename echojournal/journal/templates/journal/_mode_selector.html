@@ -1,0 +1,15 @@
+
+<select 
+  name="slug"
+  class="form-select"
+  hx-post="{% url 'journal:switch_mode' %}" 
+  hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'
+  hx-trigger="change"
+  hx-target="#current-mode"
+  hx-swap="outerHTML"
+>
+  <option disabled selected>Choose a mode...</option>
+  {% for m in modes %}
+    <option value="{{ m.slug }}">{{ m.name }}</option>
+  {% endfor %}
+</select>

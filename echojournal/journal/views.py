@@ -22,7 +22,7 @@ from django.utils import timezone as dj_timezone
 from datetime import datetime, time
 from pytz import timezone, UTC
 from django.shortcuts import get_object_or_404
-from .utils import get_current_mode
+from .utils import get_current_mode, set_mode_for_user
 from django.views.decorators.http import require_POST
 
 
@@ -116,6 +116,12 @@ def journal_dashboard(request):
     })
 
 @login_required
+def mode_selector(request):
+    modes = JournalMode.objects.filter(is_active=True).order_by('name')
+    return render(request, "journal/_mode_selector.html", {'modes': modes})
+
+
+@login_required
 def mode_explorer(request):
     modes = JournalMode.objects.all()
     if request.method == "POST":
@@ -141,16 +147,16 @@ def switch_mode(request):
 
     return HttpResponse(html)
 
+@require_POST
+@login_required
 def set_journal_mode(request):
-    if request.method == 'POST':
-        mode_slug = request.POST.get('mode')
-        try:
-            mode = JournalMode.objects.get(slug=mode_slug)
-            request.session['selected_mode'] = mode.slug
-            return JsonResponse({'status': 'success', 'mode': mode.name})
-        except JournalMode.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Invalid mode'})
-    return JsonResponse({'status': 'error', 'message': 'Invalid request'})
+    mode_slug = request.POST.get('mode')
+    try:
+        mode = JournalMode.objects.get(slug=mode_slug)
+        set_mode_for_user(request, mode)
+        return JsonResponse({'status': 'success', 'mode': mode.name})
+    except JournalMode.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Invalid mode'})
 
 def journal_entry_by_mode(request, slug):
     mode = get_object_or_404(JournalMode, slug=slug)

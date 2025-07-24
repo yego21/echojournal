@@ -19,10 +19,12 @@ from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from . import views
 from .views import logout_view
+import debug_toolbar
 
 
 
 urlpatterns = [
+    path('__debug__/', include(debug_toolbar.urls)),
     path('', views.landing_or_dashboard, name='landing_or_dashboard'),
     path('admin/', admin.site.urls),
     path('login/', auth_views.LoginView.as_view(template_name='user_management/login.html'), name='login'),

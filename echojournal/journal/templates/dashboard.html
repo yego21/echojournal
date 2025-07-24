@@ -25,7 +25,23 @@
     </div>
   </div>
 
+<!-- Current Mode Banner -->
+<div id="current-mode">
+  {% include "journal/_current_mode.html" with mode=mode %}
+</div>
 
+<!-- Change Mode Link -->
+<button 
+  hx-get="{% url 'journal:mode_selector' %}" 
+  hx-target="#mode-selector" 
+  hx-swap="innerHTML"
+  class="btn btn-outline-secondary mt-2"
+>
+  Change Mode
+</button>
+
+<!-- Placeholder for mode list -->
+<div id="mode-selector" class="mt-2"></div>
 
 
 
@@ -34,7 +50,7 @@
 
   
   <!-- Journal Form -->
-  {% include "journal/journal_form.html" %}
+  {% include "journal/journal_form.html" %}0
 
   <!-- Filter by Date Section -->
   <div class="mt-10 p-4 border border-gray-300 rounded bg-gray-50">

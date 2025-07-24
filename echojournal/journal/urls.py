@@ -12,5 +12,6 @@ urlpatterns = [
     path('fetch-entries/', views.filter_entries_by_date, name='filter_entries_by_date'),
     path('modes/', views.mode_explorer, name='mode_explorer'),
     path("switch-mode/", views.switch_mode, name="switch_mode"),
-    path('mode/<slug:slug>/', views.journal_entry_by_mode, name='journal_entry_by_mode')
+    path('mode/<slug:slug>/', views.journal_entry_by_mode, name='journal_entry_by_mode'),
+    path('mode-selector/', views.mode_selector, name='mode_selector'),
 ]
