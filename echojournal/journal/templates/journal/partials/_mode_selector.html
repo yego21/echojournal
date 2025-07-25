@@ -1,0 +1,20 @@
+<div class="p-4 bg-gray-100 rounded-md">
+  <label for="mode-select" class="block text-sm font-medium text-gray-700 mb-2">
+    Select Mode
+  </label>
+  <select 
+    id="mode-select"
+    name="slug"
+    class="w-full border border-gray-300 rounded px-3 py-2"
+    hx-post="{% url 'journal:switch_mode' %}" 
+    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+    hx-trigger="change"
+    hx-target="#current-mode"
+    hx-swap="outerHTML"
+  >
+    <option disabled selected>Choose a mode...</option>
+    {% for m in modes %}
+      <option value="{{ m.slug }}">{{ m.name }}</option>
+    {% endfor %}
+  </select>
+</div>

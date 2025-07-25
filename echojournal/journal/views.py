@@ -118,7 +118,7 @@ def journal_dashboard(request):
 @login_required
 def mode_selector(request):
     modes = JournalMode.objects.filter(is_active=True).order_by('name')
-    return render(request, "journal/_mode_selector.html", {'modes': modes})
+    return render(request, "journal/partials/_mode_selector.html", {'modes': modes})
 
 
 @login_required
@@ -173,7 +173,7 @@ def submit_journal_entry(request):
     entries_today = JournalEntry.objects.filter(user=request.user, created_at__date=today)
 
     if entries_today.count() >= 3:
-        html = render_to_string("journal/_alert.html", {
+        html = render_to_string("journal/partials/_alert.html", {
             "type": "danger",
             "message": "Daily entry limit reached.",
         })
@@ -197,14 +197,14 @@ def submit_journal_entry(request):
             'can_add': can_add,
         }, request=request)
 
-        alert_html = render_to_string("journal/_alert.html", {
+        alert_html = render_to_string("journal/partials/_alert.html", {
             "type": "success",
             "message": "Journal entry saved successfully!",
         })
 
         return HttpResponse(alert_html + entries_html)
     else:
-        error_html = render_to_string("journal/_alert.html", {
+        error_html = render_to_string("journal/partials/_alert.html", {
             "type": "danger",
             "message": "Please correct the errors in the form.",
         })
