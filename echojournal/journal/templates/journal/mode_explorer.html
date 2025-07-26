@@ -1,22 +1,35 @@
-<!-- templates/journal/select_mode.html -->
+<!-- templates/journal/mode_explorer.html -->
 
 {% extends "base.html" %}
-{% load static %}
-
 {% block content %}
-<!-- No form -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    {% for mode in modes %}
-        <a href="{% url 'journal:journal_entry_by_mode' mode.slug %}" class="block bg-white border border-gray-200 rounded-2xl shadow-md p-6 hover:border-blue-500 transition">
-            <h2 class="text-lg font-semibold">{{ mode.name }}</h2>
-            <p class="text-sm text-gray-600 mb-4">{{ mode.description }}</p>
+<h1 class="text-2xl font-bold mb-6">Mode Explorer</h1>
 
-            {% if mode.is_premium %}
-                <span class="inline-block bg-yellow-400 text-yellow-900 text-xs px-2 py-1 rounded-full uppercase font-semibold tracking-wide">Premium</span>
-            {% else %}
-                <span class="inline-block bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full uppercase font-semibold tracking-wide">Free</span>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 {{ mode_styler.background_class }}" >
+    {% for mode in modes %}
+        <div class="bg-white border border-gray-200 rounded-2xl shadow-md p-6 flex flex-col justify-between gap-4">
+            <div>
+                <h2 class="text-xl font-semibold">{{ mode.name }}</h2>
+                <p class="text-sm text-gray-600 mb-2">{{ mode.description }}</p>
+                {% if mode.is_premium %}
+                    <span class="bg-yellow-400 text-yellow-900 text-xs px-2 py-1 rounded-full uppercase font-semibold tracking-wide">Premium</span>
+                {% else %}
+                    <span class="bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full uppercase font-semibold tracking-wide">Free</span>
+                {% endif %}
+            </div>
+
+            <div class="flex gap-2 mt-2">
+                <a href="{% url 'journal:set_selected_mode' mode.slug %}" class="px-3 py-2 rounded-lg text-sm font-medium bg-blue-500 text-white hover:bg-blue-600">
+                    Activate Mode
+                </a>
+                <a href="{% url 'journal:set_preferred_mode' mode.slug %}" class="px-3 py-2 rounded-lg text-sm font-medium bg-gray-100 text-gray-800 hover:bg-gray-200">
+                    Set as Preferred
+                </a>
+            </div>
+
+            {% if active_mode and mode.slug == active_mode %}
+                <p class="text-green-600 text-xs mt-1">Currently Active</p>
             {% endif %}
-        </a>
+        </div>
     {% endfor %}
 </div>
 {% endblock %}

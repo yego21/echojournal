@@ -11,7 +11,9 @@ urlpatterns = [
     path('synthesize/', views.synthesize_entries, name='synthesize_entries'),
     path('fetch-entries/', views.filter_entries_by_date, name='filter_entries_by_date'),
     path('modes/', views.mode_explorer, name='mode_explorer'),
-    path("switch-mode/", views.switch_mode, name="switch_mode"),
+    path("_synth_button/", views._synth_button, name="_synth_button"),
     path('mode/<slug:slug>/', views.journal_entry_by_mode, name='journal_entry_by_mode'),
     path('mode-selector/', views.mode_selector, name='mode_selector'),
+    path("set-selected-mode/<mode_slug>/", views.set_selected_mode, name="set_selected_mode"),
+    path("set-preferred-mode/<mode_slug>/", views.set_preferred_mode, name="set_preferred_mode"),
 ]

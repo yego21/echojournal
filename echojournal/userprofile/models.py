@@ -8,7 +8,7 @@ from journal.models import JournalMode
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     preferred_mode = models.ForeignKey(
-        'journal.JournalMode',
+        JournalMode,
         null=True, blank=True,
         on_delete=models.SET_NULL
     )

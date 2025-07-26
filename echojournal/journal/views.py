@@ -1,4 +1,7 @@
 import json
+
+from django.contrib import messages
+from django.core.mail.backends import console
 from django.utils.timezone import now
 import pytz
 from django.shortcuts import render, redirect
@@ -22,7 +25,7 @@ from django.utils import timezone as dj_timezone
 from datetime import datetime, time
 from pytz import timezone, UTC
 from django.shortcuts import get_object_or_404
-from .utils import get_current_mode, set_mode_for_user
+from .utils import get_current_mode, set_mode_for_user, get_mode_styler_context, get_active_mode
 from django.views.decorators.http import require_POST
 
 
@@ -53,20 +56,16 @@ def generate_summary(entries):
     return response.choices[0].message.content
 
 
-def extract_tags(entries):
+def extract_tags(entry):
     client = Groq(api_key=settings.GROQ_API_KEY)
 
     prompt = (
-        "You are a journaling assistant. Based on the following entries, return a concise list of emotional or thematic "
+        "You are a journaling assistant. Based on the following entry, return a concise list of emotional or thematic "
         "tags that reflect the core content. Examples: 'burnout', 'inspiration', 'routine', 'loneliness'. "
         "Only return a JSON list of tags, like: [\"tag1\", \"tag2\", ...]\n\n"
     )
 
-    for entry in entries:
-        prompt += f"\nDate: {entry.created_at.strftime('%Y-%m-%d %H:%M')}\n"
-        prompt += f"Entry 1: {entry.content}\n"
-        prompt += f"Entry 2: {entry.content}\n"
-        prompt += f"Entry 3: {entry.content}\n"
+    prompt += f"- {entry.content.strip()}\n"
 
     response = client.chat.completions.create(
         model="compound-beta-mini",
@@ -83,7 +82,6 @@ def extract_tags(entries):
         return []
 
 
-
  # Assumes you have a helper to tag entries
 
 def get_session_timezone(request):
@@ -94,58 +92,109 @@ def get_session_timezone(request):
 
 
 
+
+
+
 # 1. MAIN DASHBOARD VIEW
 @login_required
 def journal_dashboard(request):
-    current_mode = get_current_mode(request)
+    print("===== DASHBOARD DEBUG START =====")
+
+    # Debug session state
+    session_selected_mode_slug = request.session.get("selected_mode_slug")
+    session_preferred_mode_slug = getattr(request.user.userprofile.preferred_mode, "slug", None)
+
+    print(f"DEBUG: Session 'selected_mode_slug' = {session_selected_mode_slug}")
+    print(f"DEBUG: UserProfile 'preferred_mode_slug' = {session_preferred_mode_slug}")
+
+    # Determine active_mode
+    active_mode = get_active_mode(request)
+    print(f"DEBUG: Resolved active_mode = {active_mode} (id={getattr(active_mode, 'id', None)})")
+
+    # Prepare other data
     form = JournalEntryForm()
     today = now().date()
-
     entries_today = JournalEntry.objects.filter(user=request.user, created_at__date=today).order_by('-created_at')
-
     can_add = entries_today.count() < 3
     modes = JournalMode.objects.filter(is_active=True).order_by('name')
+    mode_styler = get_mode_styler_context(active_mode)
+
+    print(f"DEBUG: Entries today count = {entries_today.count()}")
+    print(f"DEBUG: Can add more entries today? = {can_add}")
+    print("===== DASHBOARD DEBUG END =====")
 
     return render(request, 'dashboard.html', {
         'form': form,
         'entries': entries_today,
-        'mode': current_mode,
+        'active_mode': active_mode,
         'modes': modes,
         'can_add': can_add,
         'user_timezone': str(get_session_timezone(request)),
+        'mode_styler': mode_styler,
     })
+
+
 
 @login_required
 def mode_selector(request):
     modes = JournalMode.objects.filter(is_active=True).order_by('name')
+    print('Current Mode:' + str(get_current_mode(request)))
     return render(request, "journal/partials/_mode_selector.html", {'modes': modes})
 
 
 @login_required
 def mode_explorer(request):
     modes = JournalMode.objects.all()
-    if request.method == "POST":
-        selected_mode_id = request.POST.get("mode_id")
-        profile = request.user.userprofile
-        profile.selected_mode_id = selected_mode_id
-        profile.save()
-        return redirect('journal_dashboard')
+    active_mode = get_active_mode(request)
+    mode_styler = get_mode_styler_context(active_mode)
+    return render(request, "journal/mode_explorer.html", {
+        "modes": modes,
+        "active_mode": active_mode,
+        'mode_styler': mode_styler,
+    })
 
-    return render(request, 'journal/mode_explorer.html', {'modes': modes})
-
-@require_POST
 @login_required
-def switch_mode(request):
-    slug = request.POST.get('slug')
-    mode = get_object_or_404(JournalMode, slug=slug)
-    request.session['selected_mode'] = mode.slug
+def set_selected_mode(request, mode_slug):
+    mode = get_object_or_404(JournalMode, slug=mode_slug)
+    request.session['selected_mode_slug'] = mode.slug
+    return redirect("journal:mode_explorer")
 
-    # Optionally return new UI fragment (like a banner or button)
-    html = render_to_string("journal/_current_mode.html", {
-        'mode': mode
-    }, request=request)
+@login_required
+def set_preferred_mode(request, mode_slug):
+    mode = get_object_or_404(JournalMode, slug=mode_slug)
+    userprofile = request.user.userprofile
+    userprofile.preferred_mode = mode
+    userprofile.save()
+    return redirect("journal:mode_explorer")
 
-    return HttpResponse(html)
+# @login_required
+# def mode_explorer(request):
+#     modes = JournalMode.objects.all()
+#     if request.method == "POST":
+#         selected_mode_id = request.POST.get("mode_id")
+#         profile = request.user.userprofile
+#         profile.selected_mode_id = selected_mode_id
+#         profile.save()
+#         return redirect('journal_dashboard')
+#
+#     return render(request, 'journal/mode_explorer.html', {'modes': modes})
+
+@login_required
+@require_POST
+def _synth_button(request):
+    mode_slug = request.POST.get("slug")
+    print(f"DEBUG: SLUG: = {mode_slug}")
+    mode = get_object_or_404(JournalMode, slug=mode_slug)
+    request.session['selected_mode_slug'] = mode.slug
+
+    # For rendering updated Synthesize button
+    selected_mode = mode  # just being explicit
+    mode_styler = get_mode_styler_context(selected_mode)
+
+    return render(request, "journal/_synthesize_button.html", {
+        "mode_styler": mode_styler,
+        'selected_mode': selected_mode,
+    })
 
 @require_POST
 @login_required
@@ -186,7 +235,7 @@ def submit_journal_entry(request):
         entry.save()
 
         # Tagging and save again
-        entry.tags = extract_tags([entry])
+        entry.tags = extract_tags(entry)
         entry.save()
 
         entries_today = JournalEntry.objects.filter(user=request.user, created_at__date=today).order_by('-created_at')

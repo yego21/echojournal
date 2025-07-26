@@ -1,14 +1,17 @@
-from journal.models import JournalMode
+from .models import JournalMode
 
-def current_mode(request):
-    if request.user.is_authenticated:
-        mode = request.session.get('selected_mode')
+def active_mode(request):
+    mode = None
 
-        if mode:
-            try:
-                selected_mode = JournalMode.objects.get(slug=mode)
-                return {'current_mode': selected_mode}
-            except JournalMode.DoesNotExist:
-                pass  # falls through to return an empty dict
+    # 1. Check if selected_mode is in session
+    selected_mode_id = request.session.get("selected_mode_id")
+    if selected_mode_id:
+        mode = JournalMode.objects.filter(id=selected_mode_id).first()
 
-    return {'current_mode': None}
+    # 2. If not, fallback to preferred_mode
+    if not mode and request.user.is_authenticated:
+        user_profile = getattr(request.user, "userprofile", None)
+        if user_profile and user_profile.preferred_mode:
+            mode = user_profile.preferred_mode
+
+    return {"active_mode": mode}

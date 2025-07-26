@@ -74,7 +74,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'journal.context_processors.current_mode',
+                'journal.context_processors.active_mode',
             ],
         },
     },
