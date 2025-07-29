@@ -1,5 +1,5 @@
-<div class="mt-10 p-4 border border-gray-300 rounded bg-gray-50">
-  <h3 class="text-md font-semibold mb-2 text-gray-700">📅 View Past Entries</h3>
+<div class="mt-10 p-4 border rounded {{ mode_styler.view_entries_class }}">
+  <h3 class="text-md font-semibold mb-2 {{ mode_styler.text_class }}">📅 View Past Entries</h3>
   <div class="flex items-center space-x-4 mb-4">
     <input 
       type="date" 
@@ -12,7 +12,7 @@
       hx-trigger="change"
     >
     <button 
-      class="bg-blue-600 text-white px-4 py-2 rounded"
+      class="{{ mode_styler.view_entries_button }}"
       hx-get="{% url 'journal:filter_entries_by_date' %}"
       hx-target="#filtered-entry-list"
       hx-include="#entry-date"

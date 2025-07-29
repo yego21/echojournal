@@ -2,6 +2,25 @@
 from .models import JournalMode
 from .mode_styler import MODE_STYLER_CONFIG
 
+
+def get_synthesis_prompt(mode_slug, synthesis_type):
+    SYNTHESIS_PROMPTS = {
+        'mystical': {
+            'reflect': "You are a wise mystic who sees deeper spiritual patterns...",
+            'digest': "As an intuitive guide, summarize the cosmic patterns...",
+            'roast': "Channel your inner cosmic trickster and playfully call out...",
+            'suggest': "As a spiritual advisor, suggest mystical practices..."
+        },
+        'philosophical': {
+            'reflect': "You are a thoughtful philosopher who examines life's deeper meanings...",
+            'digest': "Analyze these thoughts with philosophical rigor...",
+            'roast': "Be a brutally honest Socratic questioner...",
+            'suggest': "Suggest philosophical exercises and deeper questions..."
+        }
+        # Add more modes as needed
+    }
+    return SYNTHESIS_PROMPTS.get(mode_slug, {}).get(synthesis_type, "Default prompt...")
+
 def get_preferred_mode(user):
     preferred_mode = getattr(user.profile, 'preferred_mode', None)
     return preferred_mode.slug if preferred_mode else None

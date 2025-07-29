@@ -25,26 +25,32 @@ from django.utils import timezone as dj_timezone
 from datetime import datetime, time
 from pytz import timezone, UTC
 from django.shortcuts import get_object_or_404
-from .utils import get_current_mode, set_mode_for_user, get_mode_styler_context, get_active_mode
+from .utils import get_current_mode, set_mode_for_user, get_mode_styler_context, get_active_mode, get_synthesis_prompt
+
 from django.views.decorators.http import require_POST
 
 
-def generate_summary(entries):
+
+@login_required
+def load_insight_panel(request):
+    return render(request, 'journal/insights/insight_panel.html')
+
+@login_required
+def load_insight_tab(request, tab_name):
+    # You can route logic here later, for now just echo the tab
+    return render(request, f'journal/insights/_{tab_name}.html')
+
+
+def generate_summary_by_mode_and_type(entries, mode_slug, synthesis_type):
     client = Groq(api_key=settings.GROQ_API_KEY)
 
-    prompt = (
-        "You are a genius that notices patterns that people may not see. "
-        "You always get the gist based on user entries and hint them as to what they might need and want. "
-        "You also cheer them up in your own way, often backhanded.\n\n"
-    )
+    # Get the right prompt for mode + type combination
+    prompt = get_synthesis_prompt(mode_slug, synthesis_type)
 
+    # Add entries to prompt
     for entry in entries:
         prompt += f"\nDate: {entry.created_at.strftime('%Y-%m-%d %H:%M')}\n"
-        prompt += f"Entry 1: {entry.content}\n"
-        prompt += f"Entry 2: {entry.content}\n"
-        prompt += f"Entry 3: {entry.content}\n"
-
-    prompt += "\nSummary:"
+        prompt += f"Entry: {entry.content}\n"
 
     response = client.chat.completions.create(
         model="compound-beta-mini",
@@ -54,6 +60,26 @@ def generate_summary(entries):
     )
 
     return response.choices[0].message.content
+
+
+@require_GET
+def synthesize_entries(request):
+    # Get parameters
+    synthesis_type = request.GET.get('type', 'reflect')  # Default to reflect
+    mode_slug = get_active_mode(request)  # Get current mode
+
+    entries = JournalEntry.objects.filter(user=request.user).order_by('-created_at')
+    if not entries:
+        return HttpResponse("No entries yet to summarize.", status=400)
+
+    # Generate based on mode + type combination
+    summary = generate_summary_by_mode_and_type(entries, mode_slug, synthesis_type)
+
+    return render(request, 'journal/_synthesis.html', {
+        'synthesis': summary,
+        'synthesis_type': synthesis_type,
+        'mode': mode_slug
+    })
 
 
 def extract_tags(entry):
@@ -153,6 +179,37 @@ def mode_explorer(request):
         'mode_styler': mode_styler,
     })
 
+
+@login_required
+@require_POST
+def switch_mode_dynamic(request):
+    mode_slug = request.POST.get('mode_slug')
+    if not mode_slug:
+        return HttpResponseBadRequest("No mode selected")
+
+    try:
+        mode = JournalMode.objects.get(slug=mode_slug, is_active=True)
+        # Update session only
+        request.session['selected_mode_slug'] = mode.slug
+
+        # Get updated context
+        mode_styler = get_mode_styler_context(mode_slug)
+
+        # Return multiple HTMX updates
+        response = HttpResponse()
+        response['HX-Trigger-After-Swap'] = json.dumps({
+            "updateTheme": {
+                "mode_slug": mode_slug,
+                "background_class": mode_styler['background_class'],
+                "mode_name": mode.name
+            }
+        })
+        return response
+
+    except JournalMode.DoesNotExist:
+        return HttpResponseBadRequest("Invalid mode")
+
+
 @login_required
 def set_selected_mode(request, mode_slug):
     mode = get_object_or_404(JournalMode, slug=mode_slug)
@@ -181,19 +238,53 @@ def set_preferred_mode(request, mode_slug):
 
 @login_required
 @require_POST
-def _synth_button(request):
-    mode_slug = request.POST.get("slug")
+def _mode_banner(request):
+    mode_slug = request.POST.get("slug")  # Get from POST data
+    if not mode_slug:
+        mode_slug = get_active_mode(request)  # Fallback to session
+
     print(f"DEBUG: SLUG: = {mode_slug}")
     mode = get_object_or_404(JournalMode, slug=mode_slug)
-    request.session['selected_mode_slug'] = mode.slug
+    # Don't update session here - switch_mode_dynamic already did it
 
-    # For rendering updated Synthesize button
-    selected_mode = mode  # just being explicit
-    mode_styler = get_mode_styler_context(selected_mode)
-
-    return render(request, "journal/_synthesize_button.html", {
+    mode_styler = get_mode_styler_context(mode_slug)
+    return render(request, "journal/_mode_banner.html", {
         "mode_styler": mode_styler,
-        'selected_mode': selected_mode,
+        'selected_mode': mode,
+    })
+
+
+@login_required
+@require_POST
+def _synth_button(request):
+    mode_slug = request.POST.get("slug")
+    if not mode_slug:
+        mode_slug = get_active_mode(request)
+
+    mode = get_object_or_404(JournalMode, slug=mode_slug)
+    mode_styler = get_mode_styler_context(mode_slug)
+
+    return render(request, "journal/_synthesize_buttons.html", {
+        "mode_styler": mode_styler,
+        'selected_mode': mode,
+    })
+
+
+@login_required
+@require_POST
+def _entry_filter(request):
+    mode_slug = request.POST.get("slug")  # Get from POST data
+    if not mode_slug:
+        mode_slug = get_active_mode(request)  # Fallback to session
+
+    print(f"DEBUG: SLUG: = {mode_slug}")
+    mode = get_object_or_404(JournalMode, slug=mode_slug)
+    # Don't update session here - switch_mode_dynamic already did it
+
+    mode_styler = get_mode_styler_context(mode_slug)
+    return render(request, "journal/_entry_filter.html", {
+        "mode_styler": mode_styler,
+        'selected_mode': mode,
     })
 
 @require_POST
@@ -278,17 +369,7 @@ def same_day_entries(request):
 
     return HttpResponse(html)
 
-@require_GET
-def synthesize_entries(request):
-    entries = JournalEntry.objects.filter(user=request.user).order_by('-created_at')
-    if not entries:
-        return HttpResponse("No entries yet to summarize.", status=400)
 
-    summary = generate_summary(entries)
-
-    return render(request, 'journal/_synthesis.html', {
-        'synthesis': summary
-    })
 
 
 
