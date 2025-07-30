@@ -1,0 +1,409 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="journal_container" class="{{ mode_styler.background_class }}>
+<div class="min-h-screen bg-gray-50 {{ mode_styler.background_class }}">
+  
+ <!-- Header with Logo/Slogan and Mode Selector -->
+<div class="max-w-6xl mx-auto px-4 py-6">
+  <div class="flex justify-between items-center">
+    
+    <!-- Logo and Slogan (Left Side) -->
+    <div class="flex items-center space-x-4">
+      <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center">
+        <span class="text-white font-bold text-lg">🌀</span>
+      </div>
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">Gloq</h1>
+        <p class="text-sm text-gray-600">Simple notes, Subtle power</p>
+      </div>
+    </div>
+
+    <!-- Mode Selector (Right Side) -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-1">
+      <select 
+        id="mode-select"
+        name="mode_slug"
+        class="bg-transparent border-0 rounded-lg px-4 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+        hx-post="{% url 'journal:switch_mode_dynamic' %}" 
+        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+        hx-trigger="change"
+        hx-target="body"
+        hx-swap="none"
+      >
+        <option disabled {% if not active_mode %}selected{% endif %}>Choose a mode...</option>
+        
+        {% for m in modes %}
+          <option value="{{ m.slug }}" {% if active_mode == m.slug %}selected{% endif %}>
+            {{ m.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Main Content Grid -->
+
+  <div class="max-w-6xl mx-auto px-4 pb-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Left Column: Journal Entry & Recent Entries -->
+      <div class="lg:col-span-2 space-y-6">
+
+        <!-- New Entry Card -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+              <h2 class="text-lg font-medium text-gray-900">New Entry</h2>
+              <button id="toggle-entry" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-full transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          
+          <div id="entry-form-container" class="p-6 hidden">
+            {% include "journal/journal_form.html" %}
+          </div>
+        </div>
+<div id="form-alerts"></div>
+        <!-- Mode Features / AI Insights Container -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div class="p-6 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900" id="content-title">Mode Features</h3>
+          </div>
+          
+          <div id="dynamic-content" class="p-6">
+            <!-- Mode-specific content will load here -->
+            <div id="mode-features">
+              {% if active_mode == 'mystical' %}
+                <div class="space-y-4">
+                  <h4 class="font-medium text-purple-800">🌙 Current Astrological Events</h4>
+                  <div class="bg-purple-50 rounded-lg p-4">
+                    <p class="text-sm text-purple-700">Mercury is in retrograde - a perfect time for reflection and inner work.</p>
+                    <p class="text-xs text-purple-600 mt-2">New Moon phase: Focus on setting intentions</p>
+                  </div>
+                </div>
+              {% elif active_mode == 'philosophical' %}
+                <div class="space-y-4">
+                  <h4 class="font-medium text-blue-800">🏛️ Philosophical Focus</h4>
+                  <div class="bg-blue-50 rounded-lg p-4">
+                    <p class="text-sm text-blue-700">Today's contemplation: "What does it mean to live authentically?"</p>
+                    <p class="text-xs text-blue-600 mt-2">Suggested reading: Stoic reflections on virtue</p>
+                  </div>
+                </div>
+              {% else %}
+                <div class="space-y-4">
+                  <h4 class="font-medium text-gray-700">📝 Journal Features</h4>
+                  <div class="bg-gray-50 rounded-lg p-4">
+                    <p class="text-sm text-gray-600">Select a mode above to see specialized features and insights.</p>
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: AI Insights & Quick Stats -->
+      <div class="space-y-6">
+
+        <!-- AI Insights -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900">AI Insights</h3>
+          </div>
+          
+          <p class="text-gray-600 text-sm mb-4">Discover patterns and insights from your journal entries</p>
+          
+          <button id="insight_button"
+            onclick="toggleAIInsights()"
+            class="w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium">
+            Open Insights
+          </button>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
+          
+          <div class="grid grid-cols-3 gap-3">
+            <!-- Mood Tracker -->
+            <button class="flex flex-col items-center p-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-colors group">
+              <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01"/>
+              </svg>
+              <span class="text-xs">Mood</span>
+            </button>
+            
+            <!-- Tags -->
+            <button class="flex flex-col items-center p-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-colors group">
+              <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5l7 7-7 7-7-7V3z"/>
+              </svg>
+              <span class="text-xs">Tags</span>
+            </button>
+            
+            <!-- Analytics -->
+            <button class="flex flex-col items-center p-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-colors group">
+              <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+              <span class="text-xs">Stats</span>
+            </button>
+            
+            <!-- Search -->
+            <button class="flex flex-col items-center p-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-colors group">
+              <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+              <span class="text-xs">Search</span>
+            </button>
+            
+            <!-- Export -->
+            <button class="flex flex-col items-center p-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-colors group">
+              <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+              <span class="text-xs">Export</span>
+            </button>
+            
+            <!-- Settings -->
+            <button class="flex flex-col items-center p-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-colors group">
+              <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </svg>
+              <span class="text-xs">Settings</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Daily Quote -->
+        <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg border border-indigo-100 p-6">
+          <div class="flex items-start gap-3">
+            <svg class="w-6 h-6 text-indigo-400 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z"/>
+            </svg>
+            <div>
+              <p class="text-gray-700 italic mb-2">"The way to get started is to quit talking and begin doing."</p>
+              <p class="text-sm text-gray-500">— Walt Disney</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">This Week</h3>
+          <div class="space-y-3">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Entries</span>
+              <span class="font-medium text-gray-900">{{ entries_count|default:0 }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Current Streak</span>
+              <span class="font-medium text-green-600">{{ streak_days|default:0 }} days</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Total Words</span>
+              <span class="font-medium text-gray-900">{{ word_count|default:0 }}</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  
+  <!-- Hidden container for loading AI insights -->
+  <div id="insight-panel" style="display: none;"></div>
+
+</div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleBtn = document.getElementById('toggle-entry');
+    const formContainer = document.getElementById('entry-form-container');
+    
+    toggleBtn.addEventListener('click', function() {
+        // Clear any previous alerts when opening form
+        const alertContainer = document.getElementById('form-alerts');
+        if (alertContainer) {
+            alertContainer.innerHTML = '';
+        }
+        
+        // Clear form if it exists
+        const form = document.getElementById('journal-form');
+        if (form && !formContainer.classList.contains('hidden')) {
+            form.reset();
+        }
+        
+        formContainer.classList.toggle('hidden');
+        
+        // Focus on textarea when opened
+        if (!formContainer.classList.contains('hidden')) {
+            const textarea = formContainer.querySelector('textarea');
+            if (textarea) textarea.focus();
+        }
+        
+        // Rotate the plus icon
+        const icon = toggleBtn.querySelector('svg');
+        icon.style.transform = formContainer.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(45deg)';
+    });
+});
+
+// Handle HTMX form submission responses
+// Handle HTMX form submission responses
+document.body.addEventListener('htmx:afterRequest', function(event) {
+    console.log('HTMX afterRequest triggered', event.detail);
+    
+    if (event.detail.target && event.detail.target.id === 'journal-form') {
+        const xhr = event.detail.xhr;
+        const alertContainer = document.getElementById('form-alerts');
+        const formContainer = document.getElementById('entry-form-container');
+        
+        console.log('Form submission detected. Status:', xhr.status);
+        console.log('Response text:', xhr.responseText);
+        
+        if (!alertContainer) {
+            console.error('Alert container not found!');
+            return;
+        }
+        
+        try {
+            const response = JSON.parse(xhr.responseText);
+            console.log('Parsed response:', response);
+            
+            if (xhr.status === 200 && response.success) {
+                console.log('Success case triggered');
+                // Success - show message, reset and hide form
+                alertContainer.innerHTML = `
+                    <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-4 mx-6 mt-4">
+                        ${response.message}
+                    </div>
+                `;
+                
+                // Reset form and hide container
+                const form = document.getElementById('journal-form');
+                if (form) form.reset();
+                if (formContainer) formContainer.classList.add('hidden');
+                
+                // Reset the plus icon
+                const icon = document.querySelector('#toggle-entry svg');
+                if (icon) icon.style.transform = 'rotate(0deg)';
+                
+                // Refresh entry list if it exists
+                const entryList = document.getElementById('entry-list');
+                if (entryList) {
+                    htmx.ajax('GET', '{% url "journal:same_day_entries" %}', {
+                        target: '#entry-list',
+                        swap: 'innerHTML'
+                    });
+                }
+                
+                // Auto-hide success message after 5 seconds
+                setTimeout(() => {
+                    if (alertContainer) alertContainer.innerHTML = '';
+                }, 5000);
+                
+            } else {
+                console.log('Error case triggered');
+                // Error - show error message
+                alertContainer.innerHTML = `
+                    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4 mx-6 mt-4">
+                        ${response.error}
+                    </div>
+                `;
+            }
+        } catch (e) {
+            console.error('Error parsing response:', e);
+            alertContainer.innerHTML = `
+                <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4 mx-6 mt-4">
+                    An error occurred while saving your entry.
+                </div>
+            `;
+        }
+    }
+});
+
+// Function to toggle AI Insights
+
+let showingInsights = false;
+let cachedModeFeaturesHTML = null;
+
+function toggleAIInsights() {
+    const contentTitle = document.getElementById('content-title');
+    const dynamicContent = document.getElementById('dynamic-content');  
+   
+  
+
+    if (!cachedModeFeaturesHTML) {
+        const modeFeatures = document.getElementById('mode-features');
+        if (modeFeatures) {
+            cachedModeFeaturesHTML = modeFeatures.innerHTML;
+        } else {
+            console.warn("mode-features not found in DOM.");
+        }
+    }
+
+    if (showingInsights) {
+        // Restore cached Mode Features
+        contentTitle.textContent = 'Mode Features';        
+        dynamicContent.innerHTML = cachedModeFeaturesHTML;
+        showingInsights = false;
+        event.target.textContent = "Open Insights";
+        console.log("Switched back to Mode Features");
+    } else {
+        // Load AI Insights (via HTMX)
+        contentTitle.textContent = 'AI Insights';
+        htmx.ajax('GET', '{% url "journal:load_insight_panel" %}', {
+            target: '#dynamic-content',
+            swap: 'innerHTML'
+        });
+        showingInsights = true;
+        event.target.textContent = "Close Insights";
+        console.log("Switched to AI Insights");
+    }
+}
+
+
+</script>
+
+
+<!-- Theme & Panel Reload -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.body.addEventListener('updateTheme', function(event) {
+        const { mode_slug, background_class } = event.detail;
+
+        const container = document.getElementById('journal_container');
+        if (container) {
+            container.className = container.className.replace(/bg-\w+-\d+/g, '') + ' ' + background_class + ' min-h-screen transition-all duration-300';
+        }
+
+      
+       
+    });
+});
+</script>
+  
+        <!-- htmx.ajax('POST', '{% url "journal:_mode_banner" %}', {
+                values: { slug: mode_slug },
+                target: '#mode-banner-wrapper',
+                swap: 'innerHTML'
+          }); 
+        htmx.ajax('POST', '{% url "journal:_entry_filter" %}', {
+          values: { slug: mode_slug },
+          target: '#entry-filter-wrapper',
+          swap: 'innerHTML'
+      }); -->
+{% endblock %}

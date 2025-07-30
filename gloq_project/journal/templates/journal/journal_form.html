@@ -1,0 +1,23 @@
+<form 
+  id="journal-form"
+  method="POST" 
+  hx-post="{% url 'journal:new_journal_entry' %}"
+  hx-target="this"
+  hx-swap="none"
+  hx-confirm="Are you sure you want to submit this journal entry?"
+  class="space-y-4"
+>
+  {% csrf_token %}
+  {{ form.as_p }}
+
+  <button 
+    type="submit"
+    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors"
+  >
+    Submit Entry
+  </button>
+</form>
+
+<!-- Alert container for showing success/error messages -->
+ <br>
+ <hr>

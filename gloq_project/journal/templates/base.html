@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Gloq{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+<!-- Header -->
+<header class="bg-white border-b border-gray-200">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+    <div class="text-xl font-semibold text-gray-800">
+      <a href="/">🌀 Gloq</a>
+    </div>
+    
+     <!-- Right-side container: Timezone + Nav -->
+  <div class="flex items-center space-x-4">
+    <!-- Timezone: Always visible -->
+    <div class="text-sm text-gray-500">
+      Your Timezone: {{ user_timezone }}
+    </div>
+
+    <!-- Desktop Nav -->
+    <nav class="hidden md:flex items-center space-x-4">
+      {% if user.is_authenticated %}
+        <span class="text-gray-700">Hello, {{ user.username }}</span>        
+        <a href="{% url 'logout' %}" class="text-red-600 hover:underline">Logout</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="text-indigo-600 hover:underline">Login</a>
+        <a href="{% url 'signup' %}" class="text-indigo-600 hover:underline">Sign Up</a>
+      {% endif %}
+    </nav>
+
+    <!-- Hamburger (mobile only) -->
+     <div class="md:hidden relative"></div>
+    <button id="navToggle" class="md:hidden text-gray-600 focus:outline-none">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+           viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+    </div>
+
+    <!-- Mobile Menu -->
+<nav id="mobileMenu" class="absolute right-0 mt-40 w-48 bg-white shadow-md rounded-md md:hidden hidden z-50">
+  <div class="flex flex-col space-y-2 p-4">
+    {% if user.is_authenticated %}
+      <span class="text-gray-700">Hello, {{ user.username }}</span>
+      <a href="{% url 'landing_or_dashboard' %}" class="text-indigo-600 hover:underline">Dashboard</a>
+      <a href="{% url 'logout' %}" class="text-red-600 hover:underline">Logout</a>
+    {% else %}
+      <a href="{% url 'login' %}" class="text-indigo-600 hover:underline">Login</a>
+      <a href="{% url 'signup' %}" class="text-indigo-600 hover:underline">Sign Up</a>
+    {% endif %}
+  </div>
+</nav>
+
+  </div>
+</header>
+
+<!-- Main Dashboard Layout -->
+<main class="max-w-6xl mx-auto px-4 py-8">
+  {% block content %}
+  <!-- Dashboard Grid -->
+ 
+  {% endblock %}
+</main>
+
+<!-- AI Insights Modal Container -->
+<div id="aiInsightsModal"></div>
+
+<!-- Footer -->
+<footer class="bg-white border-t border-gray-200 mt-16">
+  <div class="max-w-6xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
+    &copy; {{ year|default:2025 }} Gloq. All rights reserved.
+  </div>
+</footer>
+
+<!-- Timezone detection script -->
+<script>
+const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+if (tz) {
+  fetch("{% url 'set-timezone' %}", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": "{{ csrf_token }}"
+    },
+    body: JSON.stringify({ timezone: tz })
+  });
+}
+</script>
+
+<script>
+  const toggleButton = document.getElementById('navToggle');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  toggleButton.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+</script>
+
+<script>
+  document.body.addEventListener('htmx:configRequest', (event) => {
+    const token = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    event.detail.headers['X-CSRFToken'] = token;
+  });
+</script>
+
+</body>
+</html>
