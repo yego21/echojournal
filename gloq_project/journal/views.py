@@ -25,8 +25,10 @@ from django.utils import timezone as dj_timezone
 from datetime import datetime, time
 from pytz import timezone, UTC
 from django.shortcuts import get_object_or_404
-from .utils import get_current_mode, set_mode_for_user, get_mode_styler_context, get_active_mode, get_synthesis_prompt
-
+from .utils import get_current_mode, set_mode_for_user, get_mode_styler_context, get_active_mode, get_synthesis_prompt, \
+    get_daily_content
+from .mode_styler import get_feature_styles
+from .context_processors import active_mode
 from django.views.decorators.http import require_POST
 
 
@@ -59,7 +61,7 @@ def generate_summary_by_mode_and_type(entries, mode_slug, synthesis_type):
         max_tokens=500,
     )
 
-    return response.choices[0].message.content
+    return response.choices[0].message.content.strip()
 
 
 @require_GET
@@ -135,6 +137,9 @@ def journal_dashboard(request):
 
     # Determine active_mode
     active_mode = get_active_mode(request)
+    if not active_mode:
+        # Fallback to preferred mode or default
+        active_mode = session_preferred_mode_slug or JournalMode.objects.get(slug='default')
     print(f"DEBUG: Resolved active_mode = {active_mode} (id={getattr(active_mode, 'id', None)})")
 
     # Prepare other data
@@ -144,6 +149,7 @@ def journal_dashboard(request):
     can_add = entries_today.count() < 3
     modes = JournalMode.objects.filter(is_active=True).order_by('name')
     mode_styler = get_mode_styler_context(active_mode)
+
 
     print(f"DEBUG: Entries today count = {entries_today.count()}")
     print(f"DEBUG: Can add more entries today? = {can_add}")
@@ -251,6 +257,36 @@ def _mode_banner(request):
     return render(request, "journal/_mode_banner.html", {
         "mode_styler": mode_styler,
         'selected_mode': mode,
+    })
+
+
+@login_required
+@require_POST
+def _mode_features(request):
+    # Get the active mode from context processor (your logic for new sessions, etc.)
+    active_mode = get_active_mode(request)
+
+    # Handle POST override - this should OVERRIDE the active mode temporarily
+    mode_slug = request.POST.get("slug")
+    if mode_slug:
+        # User is explicitly switching modes via POST
+        mode = get_object_or_404(JournalMode, slug=mode_slug)
+        # Optionally update session to remember this choice
+        request.session['selected_mode_id'] = mode.id
+    else:
+        # Use your active mode logic (preferred mode for new sessions, etc.)
+        mode = active_mode or get_object_or_404(JournalMode, slug='default')
+
+    # Use the mode's slug for styling functions
+    mode_styler = get_mode_styler_context(active_mode)
+    feature_styles = get_feature_styles(active_mode)
+    feature_content = get_daily_content(mode_slug)
+    print(f"DEBUG: Resolved active_mode features = {active_mode}")
+    return render(request, "journal/_mode_features.html", {
+        "mode_styler": mode_styler,
+        'selected_mode': mode,
+        'feature_styles': feature_styles,
+        'feature_content': feature_content
     })
 
 

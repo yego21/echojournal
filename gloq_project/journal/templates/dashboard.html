@@ -79,30 +79,7 @@
           <div id="dynamic-content" class="p-6">
             <!-- Mode-specific content will load here -->
             <div id="mode-features">
-              {% if active_mode == 'mystical' %}
-                <div class="space-y-4">
-                  <h4 class="font-medium text-purple-800">🌙 Current Astrological Events</h4>
-                  <div class="bg-purple-50 rounded-lg p-4">
-                    <p class="text-sm text-purple-700">Mercury is in retrograde - a perfect time for reflection and inner work.</p>
-                    <p class="text-xs text-purple-600 mt-2">New Moon phase: Focus on setting intentions</p>
-                  </div>
-                </div>
-              {% elif active_mode == 'philosophical' %}
-                <div class="space-y-4">
-                  <h4 class="font-medium text-blue-800">🏛️ Philosophical Focus</h4>
-                  <div class="bg-blue-50 rounded-lg p-4">
-                    <p class="text-sm text-blue-700">Today's contemplation: "What does it mean to live authentically?"</p>
-                    <p class="text-xs text-blue-600 mt-2">Suggested reading: Stoic reflections on virtue</p>
-                  </div>
-                </div>
-              {% else %}
-                <div class="space-y-4">
-                  <h4 class="font-medium text-gray-700">📝 Journal Features</h4>
-                  <div class="bg-gray-50 rounded-lg p-4">
-                    <p class="text-sm text-gray-600">Select a mode above to see specialized features and insights.</p>
-                  </div>
-                </div>
-              {% endif %}
+              
             </div>
           </div>
         </div>
@@ -382,16 +359,37 @@ function toggleAIInsights() {
 <!-- Theme & Panel Reload -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Debug: Check if Django variables are available
+    console.log('Initial mode_slug:', '{{ active_mode.slug }}');
+    console.log('Initial background_class:', '{{ mode_styler.background_class }}');
+    console.log('Container exists:', document.getElementById('journal_container'));
+    
+    // Apply initial theme on page load
+    const initialEvent = new CustomEvent('updateTheme', {
+        detail: {
+            mode_slug: '{{ active_mode.slug }}',
+            background_class: '{{ mode_styler.background_class }}'
+        }
+    });
+    document.body.dispatchEvent(initialEvent);
+
+    // Your existing event listener
     document.body.addEventListener('updateTheme', function(event) {
+        console.log('updateTheme event fired:', event.detail);
         const { mode_slug, background_class } = event.detail;
 
         const container = document.getElementById('journal_container');
+        console.log('Container found:', container);
         if (container) {
             container.className = container.className.replace(/bg-\w+-\d+/g, '') + ' ' + background_class + ' min-h-screen transition-all duration-300';
+            console.log('Applied classes:', container.className);
         }
-
-      
-       
+        
+        htmx.ajax('POST', '{% url "journal:_mode_features" %}', {
+            values: { slug: mode_slug },
+            target: '#mode-features',
+            swap: 'innerHTML'
+        }); 
     });
 });
 </script>

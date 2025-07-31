@@ -14,6 +14,7 @@ urlpatterns = [
     path('_mode_banner/', views._mode_banner, name='_mode_banner'),
     path("_synth_button/", views._synth_button, name="_synth_button"),
     path("_entry_filter/", views._entry_filter, name="_entry_filter"),
+    path("_mode_features/", views._mode_features, name="_mode_features"),
     path('mode/<slug:slug>/', views.journal_entry_by_mode, name='journal_entry_by_mode'),
     path('mode-selector/', views.mode_selector, name='mode_selector'),
     path("set-selected-mode/<mode_slug>/", views.set_selected_mode, name="set_selected_mode"),

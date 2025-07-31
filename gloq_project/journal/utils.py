@@ -1,7 +1,11 @@
 # journal/utils.py
 from .models import JournalMode
 from .mode_styler import MODE_STYLER_CONFIG
-
+from groq import Groq
+import random
+from datetime import datetime
+import os
+from django.core.cache import cache
 
 def get_synthesis_prompt(mode_slug, synthesis_type):
     SYNTHESIS_PROMPTS = {
@@ -89,3 +93,68 @@ def get_mode_styler_context(current_mode):
     if current_mode in MODE_STYLER_CONFIG:
         return MODE_STYLER_CONFIG[current_mode]
     return MODE_STYLER_CONFIG['default']
+
+
+def get_daily_philosophy_prompt():
+    """Get or generate today's philosophical question (cached for 24h)."""
+
+    # Key is unique per day
+    today_str = datetime.now().strftime('%Y-%m-%d')
+    cache_key = f"daily_philosophy_prompt:{today_str}"
+
+    # 1. Check cache first
+    cached_prompt = cache.get(cache_key)
+    if cached_prompt:
+        print(f"[DEBUG] Using cached daily prompt: {cached_prompt}")
+        return cached_prompt
+
+    try:
+        # 2. Create Groq client
+        client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+
+        # 3. Make API request
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[{
+                "role": "user",
+                "content": (
+                    f"Generate one thought-provoking philosophical question "
+                    f"for daily reflection. Make it concise and profound. "
+                    f"Today's date: {today_str}"
+                )
+            }],
+            max_tokens=100,
+            temperature=0.7
+        )
+
+        # 4. Extract prompt
+        prompt = response.choices[0].message.content.strip()
+        print(f"[DEBUG] Groq API returned: {prompt}")
+
+    except Exception as e:
+        print(f"[ERROR] Failed to get Groq response: {e}")
+
+        # 5. Fallback — still seeded to be consistent for the day
+        fallback_prompts = [
+            "What does it mean to live authentically?",
+            "How do we balance individual freedom with collective responsibility?",
+            "What role does suffering play in personal growth?"
+        ]
+        random.seed(today_str)
+        prompt = random.choice(fallback_prompts)
+        print(f"[DEBUG] Using fallback prompt: {prompt}")
+
+    # 6. Store in cache for 24 hours
+    cache.set(cache_key, prompt, timeout=60 * 60 * 24)
+
+    return prompt
+
+
+
+def get_daily_content(mode):
+    if mode == 'philosophical':
+        return {
+            'title': '🤔 Philosophical Focus',
+            'content': get_daily_philosophy_prompt(),  # This calls the API
+            'subtitle': 'Daily contemplation'
+        }

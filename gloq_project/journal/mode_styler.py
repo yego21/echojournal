@@ -20,3 +20,25 @@ MODE_STYLER_CONFIG = {
         "view_entries_button": "bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded"
     },
 }
+
+
+def get_feature_styles(mode):
+    styles = {
+        'mystical': {
+            'container': 'bg-purple-50 rounded-lg p-4',
+            'title': 'font-medium text-purple-800',
+            'text': 'text-sm text-purple-700',
+            'subtitle': 'text-xs text-purple-600 mt-2'
+        },
+        'philosophical': {
+            'container': 'bg-blue-50 rounded-lg p-4',
+            'title': 'font-medium text-blue-800',
+            'text': 'text-sm text-blue-700',
+            'subtitle': 'text-xs text-blue-600 mt-2'
+        }
+    }
+    return styles.get(mode, styles.get('default', styles['mystical']))
+
+def get_card_styles(mode):
+    # Another helper for different component types
+    pass
