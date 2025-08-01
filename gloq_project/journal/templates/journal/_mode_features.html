@@ -1,21 +1,55 @@
-{% if active_mode %}               
-                  <div class="{{ feature_styles.container }}">
-                      <h4 class="{{ feature_styles.title }}">{{ feature_content.title }}</h4>
-                      <p class="{{ feature_styles.text }}">{{ feature_content.content }}</p>
-                  </div>
-                <div class="space-y-4">
-                  <h4 class="font-medium text-purple-800">🌙 Current Astrological Events</h4>
-                  <div class="bg-purple-50 rounded-lg p-4">
-                    <p class="text-sm text-purple-700">Mercury is in retrograde - a perfect time for reflection and inner work.</p>
-                    <p class="text-xs text-purple-600 mt-2">New Moon phase: Focus on setting intentions</p>
-                  </div>
-                </div> 
-                
-              {% else %}
-                <div class="space-y-4">
-                  <h4 class="font-medium text-gray-700">📝 Journal Features</h4>
-                  <div class="bg-gray-50 rounded-lg p-4">
-                    <p class="text-sm text-gray-600">Select a mode above to see specialized features and insights.</p>
-                  </div>
-                </div>
-              {% endif %}
+{% if active_mode.slug == "philosophical" %}
+  <!-- Question -->   
+  <div class="{{ feature_styles.question_container }}">
+  <h4 class="{{ feature_styles.title }}">
+    {{ feature_content.title }}
+  </h4>
+  <p class="{{ feature_styles.text }}">
+    {{ feature_content.question_content }}
+  </p>
+  
+  <hr class="my-3 border-blue-200">
+  
+  <div class="flex items-center">
+    <span class="mr-2">📜</span>
+    <span class="{{ feature_styles.fact_title }}">Daily Insight</span>
+  </div>
+  <p class="{{ feature_styles.text }}">
+    {{ feature_content.fact_content }}
+  </p>
+</div>
+
+{% elif active_mode.slug == "mystical" %}
+  <!-- Mystical Style: Astronomical -->
+    <div class="{{ feature_styles.astronomical_container }}">
+      <h4 class="{{ feature_styles.title }}">🌌 Astronomical Notable</h4>
+      <p class="{{ feature_styles.text }}">{{ feature_content.astronomical }}</p>
+    </div>
+ 
+
+ 
+    <!-- Mystical Style: Suggested Action -->
+    <div class="{{ feature_styles.action_container }}">
+      <h4 class="{{ feature_styles.title }}">🔮 Suggested Action</h4>
+      <p class="{{ feature_styles.text }}">{{ feature_content.action }}</p>
+    </div>
+
+
+
+    <!-- Mystical Style: Mystical Fact -->
+    <div class="{{ feature_styles.fact_container }}">
+      <h4 class="{{ feature_styles.fact_title }}">📜 Mystical Fact of the Day</h4>
+      <p class="{{ feature_styles.text }}">{{ feature_content.fact }}</p>
+    </div>
+
+
+{% else %}
+  <div class="space-y-4">
+    <h4 class="font-medium text-gray-700">📝 Journal Features</h4>
+    <div class="bg-gray-50 rounded-lg p-4">
+      <p class="text-sm text-gray-600">
+        Select a mode above to see specialized features and insights.
+      </p>
+    </div>
+  </div>
+{% endif %}

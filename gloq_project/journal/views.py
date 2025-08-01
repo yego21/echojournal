@@ -280,7 +280,7 @@ def _mode_features(request):
     # Use the mode's slug for styling functions
     mode_styler = get_mode_styler_context(active_mode)
     feature_styles = get_feature_styles(active_mode)
-    feature_content = get_daily_content(mode_slug)
+    feature_content = get_daily_content(request, mode_slug)
     print(f"DEBUG: Resolved active_mode features = {active_mode}")
     return render(request, "journal/_mode_features.html", {
         "mode_styler": mode_styler,

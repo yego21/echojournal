@@ -114,13 +114,13 @@
           <h3 class="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
           
           <div class="grid grid-cols-3 gap-3">
-            <!-- Mood Tracker -->
-            <button class="flex flex-col items-center p-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-colors group">
-              <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01"/>
-              </svg>
-              <span class="text-xs">Mood</span>
-            </button>
+           <!-- Mode Explorer -->
+    <a href="{% url 'journal:mode_explorer' %}" class="flex flex-col items-center p-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-colors group">
+        <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01"/>
+        </svg>
+        <span class="text-xs">Modes</span>
+    </a>
             
             <!-- Tags -->
             <button class="flex flex-col items-center p-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-colors group">
@@ -359,37 +359,59 @@ function toggleAIInsights() {
 <!-- Theme & Panel Reload -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Debug: Check if Django variables are available
-    console.log('Initial mode_slug:', '{{ active_mode.slug }}');
-    console.log('Initial background_class:', '{{ mode_styler.background_class }}');
-    console.log('Container exists:', document.getElementById('journal_container'));
+    console.log('=== INITIAL MODE LOADING ===');
+    console.log('Raw active_mode value:', '{{ active_mode }}');
+    console.log('Raw background_class:', '{{ mode_styler.background_class }}');
     
-    // Apply initial theme on page load
-    const initialEvent = new CustomEvent('updateTheme', {
-        detail: {
-            mode_slug: '{{ active_mode.slug }}',
-            background_class: '{{ mode_styler.background_class }}'
-        }
-    });
-    document.body.dispatchEvent(initialEvent);
+    // 1. Load initial mode features via HTMX
+    const initialModeSlug = '{{ active_mode }}';  // Using active_mode instead of active_mode.slug
+    if (initialModeSlug) {
+        console.log('Loading initial mode features for:', initialModeSlug);
+        htmx.ajax('POST', '{% url "journal:_mode_features" %}', {
+            values: { slug: initialModeSlug },
+            target: '#mode-features',
+            swap: 'innerHTML'
+        });
+    } else {
+        console.log('WARNING: No initial mode slug found');
+    }
 
-    // Your existing event listener
+    // 2. Apply initial background styling
+    const initialBackgroundClass = '{{ mode_styler.background_class }}';
+    const container = document.getElementById('journal_container');
+    console.log('Container found:', container);
+    console.log('Applying initial background class:', initialBackgroundClass);
+    
+    if (container && initialBackgroundClass) {
+        // Remove any existing bg classes and apply initial one
+        container.className = container.className.replace(/bg-\w+-\d+/g, '') + ' ' + initialBackgroundClass + ' min-h-screen transition-all duration-300';
+        console.log('Final container classes:', container.className);
+    }
+
+    console.log('=== INITIAL MODE LOADING COMPLETE ===');
+
+    // 3. Set up event listener for dropdown changes
     document.body.addEventListener('updateTheme', function(event) {
+        console.log('=== DROPDOWN CHANGE EVENT ===');
         console.log('updateTheme event fired:', event.detail);
         const { mode_slug, background_class } = event.detail;
 
+        // Update container styling
         const container = document.getElementById('journal_container');
-        console.log('Container found:', container);
+        console.log('Updating container with:', background_class);
         if (container) {
             container.className = container.className.replace(/bg-\w+-\d+/g, '') + ' ' + background_class + ' min-h-screen transition-all duration-300';
-            console.log('Applied classes:', container.className);
+            console.log('Updated container classes:', container.className);
         }
         
+        // Load new mode features
+        console.log('Loading new mode features for:', mode_slug);
         htmx.ajax('POST', '{% url "journal:_mode_features" %}', {
             values: { slug: mode_slug },
             target: '#mode-features',
             swap: 'innerHTML'
         }); 
+        console.log('=== DROPDOWN CHANGE COMPLETE ===');
     });
 });
 </script>

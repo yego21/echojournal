@@ -1,4 +1,8 @@
 # journal/utils.py
+import json
+
+import pytz
+
 from .models import JournalMode
 from .mode_styler import MODE_STYLER_CONFIG
 from groq import Groq
@@ -9,20 +13,50 @@ from django.core.cache import cache
 
 def get_synthesis_prompt(mode_slug, synthesis_type):
     SYNTHESIS_PROMPTS = {
-        'mystical': {
-            'reflect': "You are a wise mystic who sees deeper spiritual patterns...",
-            'digest': "As an intuitive guide, summarize the cosmic patterns...",
-            'roast': "Channel your inner cosmic trickster and playfully call out...",
-            'suggest': "As a spiritual advisor, suggest mystical practices..."
+        "mystical": {
+            "reflect": "Interpret the journal entry through symbols, dreams, and archetypal meaning. Weave in gentle spiritual insights.",
+            "digest": "Integrate today’s events into a spiritual lesson. Focus on personal growth and meaning.",
+            "roast": "Playfully call out whimsical over-interpretations or magical thinking. Keep it lighthearted.",
+            "suggest": "Recommend grounded, soulful next steps for clarity or alignment."
         },
-        'philosophical': {
-            'reflect': "You are a thoughtful philosopher who examines life's deeper meanings...",
-            'digest': "Analyze these thoughts with philosophical rigor...",
-            'roast': "Be a brutally honest Socratic questioner...",
-            'suggest': "Suggest philosophical exercises and deeper questions..."
+        "philosophical": {
+            "reflect": "Contemplate your experiences in light of life's bigger questions and timeless ideas.",
+            "digest": "Extract deep lessons or moral insights from today’s events in a thoughtful, reasoned tone.",
+            "roast": "Wittily point out contradictions, flawed reasoning, or philosophical overcomplication.",
+            "suggest": "Offer a thought-provoking question or perspective for tomorrow’s reflection."
+        },
+        "medical": {
+            "reflect": "Consider how today’s choices have influenced your physical, mental, and emotional health.",
+            "digest": "Summarize health-related patterns you’ve noticed and what they reveal.",
+            "roast": "Gently poke fun at health slips or over‑the‑top wellness attempts.",
+            "suggest": "Give a simple, actionable health tip or self-care adjustment for tomorrow."
+        },
+        "creative": {
+            "reflect": "Explore today’s events as if they were part of a story, poem, or artistic expression.",
+            "digest": "Identify creative sparks or themes emerging from your day.",
+            "roast": "Humorously exaggerate or remix moments into over‑the‑top creative takes.",
+            "suggest": "Offer a playful creative challenge or artistic prompt for tomorrow."
+        },
+        "productive": {
+            "reflect": "Assess how your time and energy were spent toward meaningful progress today.",
+            "digest": "Summarize what worked and what slowed you down in achieving your goals.",
+            "roast": "Point out amusing inefficiencies, procrastination traps, or over‑optimization.",
+            "suggest": "Recommend one small, high‑impact improvement for tomorrow’s productivity."
+        },
+        "exploratory": {
+            "reflect": "Look at today’s events as part of a journey of discovery and learning.",
+            "digest": "Highlight new experiences, ideas, or perspectives you gained today.",
+            "roast": "Poke fun at curious detours, surprising finds, or ‘how did I end up here?’ moments.",
+            "suggest": "Propose a small experiment or new path to explore tomorrow."
+        },
+        "visionary": {
+            "reflect": "Frame today’s experiences in the context of your long‑term dreams and aspirations.",
+            "digest": "Pull out the themes and steps that connect your present actions to your future vision.",
+            "roast": "Wittily point out grand plans that clash with today’s reality.",
+            "suggest": "Offer a motivating, future‑focused step for tomorrow that keeps your vision alive."
         }
-        # Add more modes as needed
-    }
+}
+
     return SYNTHESIS_PROMPTS.get(mode_slug, {}).get(synthesis_type, "Default prompt...")
 
 def get_preferred_mode(user):
@@ -95,66 +129,164 @@ def get_mode_styler_context(current_mode):
     return MODE_STYLER_CONFIG['default']
 
 
-def get_daily_philosophy_prompt():
-    """Get or generate today's philosophical question (cached for 24h)."""
 
-    # Key is unique per day
-    today_str = datetime.now().strftime('%Y-%m-%d')
-    cache_key = f"daily_philosophy_prompt:{today_str}"
+from datetime import datetime
+from django.core.cache import cache
+import random
+import os
+from groq import Groq
+import pytz
 
-    # 1. Check cache first
-    cached_prompt = cache.get(cache_key)
-    if cached_prompt:
-        print(f"[DEBUG] Using cached daily prompt: {cached_prompt}")
-        return cached_prompt
+def get_daily_philosophy_content(request):
+    """Get a daily philosophical question + fact, cached for 24h per user timezone."""
+
+    # Get user's local timezone
+    user_tz = getattr(request.user.profile, 'timezone', 'UTC') or 'UTC'
+    tz = pytz.timezone(user_tz)
+    today_str = datetime.now(tz).strftime('%Y-%m-%d')
+
+    # Cache key is unique to date + user timezone
+    cache_key = f"daily_philosophy_content:{today_str}"
+
+    # Check cache first
+    cached = cache.get(cache_key)
+    if cached:
+        print(f"[DEBUG] Using cached daily content: {cached}")
+        return cached
 
     try:
-        # 2. Create Groq client
+        # Create Groq client
         client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-        # 3. Make API request
+        # Make **one call** that asks for both
         response = client.chat.completions.create(
             model="llama-3.1-8b-instant",
             messages=[{
                 "role": "user",
                 "content": (
-                    f"Generate one thought-provoking philosophical question "
-                    f"for daily reflection. Make it concise and profound. "
-                    f"Today's date: {today_str}"
+                    f"Generate two items for a daily philosophical highlight. "
+                    f"1) A concise, thought-provoking philosophical question for self-reflection. "
+                    f"2) A short but insightful philosophical fact or idea from history. "
+                    f"Make both no more than 1–2 sentences. "
+                    f"Return them as JSON with keys 'question' and 'fact'. Today's date is {today_str}."
                 )
             }],
-            max_tokens=100,
+            max_tokens=200,
             temperature=0.7
         )
 
-        # 4. Extract prompt
-        prompt = response.choices[0].message.content.strip()
-        print(f"[DEBUG] Groq API returned: {prompt}")
+        import json
+        content_str = response.choices[0].message.content.strip()
+        try:
+            data = json.loads(content_str)  # If Groq really returns JSON
+        except json.JSONDecodeError:
+            # If not perfect JSON, fallback to parsing manually
+            data = {
+                "question": "What is the true nature of freedom?",
+                "fact": "Socrates believed wisdom begins with recognizing one's own ignorance."
+            }
+
+        print(f"[DEBUG] Groq returned: {data}")
 
     except Exception as e:
-        print(f"[ERROR] Failed to get Groq response: {e}")
+        print(f"[ERROR] Failed to get Groq content: {e}")
 
-        # 5. Fallback — still seeded to be consistent for the day
-        fallback_prompts = [
+        # Fallback content, seeded for daily consistency
+        fallback_questions = [
             "What does it mean to live authentically?",
-            "How do we balance individual freedom with collective responsibility?",
-            "What role does suffering play in personal growth?"
+            "How do we balance personal freedom with social duty?",
+            "What role does suffering play in growth?"
         ]
-        random.seed(today_str)
-        prompt = random.choice(fallback_prompts)
-        print(f"[DEBUG] Using fallback prompt: {prompt}")
+        fallback_facts = [
+            "Plato believed reality consists of eternal forms beyond physical perception.",
+            "Aristotle argued that virtue is developed through habit and practice.",
+            "Nietzsche suggested that meaning must be created, not discovered."
+        ]
+        random.seed(today_str)  # Keeps same fallback all day
+        data = {
+            "question": random.choice(fallback_questions),
+            "fact": random.choice(fallback_facts)
+        }
 
-    # 6. Store in cache for 24 hours
-    cache.set(cache_key, prompt, timeout=60 * 60 * 24)
+    # Save to cache for 24 hours
+    cache.set(cache_key, data, timeout=60 * 60 * 24)
+    return data
 
-    return prompt
+def get_daily_mystical_content(request):
+    user_tz = getattr(request.user.profile, 'timezone', 'UTC') or 'UTC'
+    tz = pytz.timezone(user_tz)
+    today_str = datetime.now(tz).strftime('%Y-%m-%d')
+    cache_key = f"daily_mystical:{today_str}"
+    cached = cache.get(cache_key)
+    if cached:
+        print(f"[DEBUG] Using cached mystical content: {cached}")
+        return cached
+
+    try:
+        client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+        prompt = (
+            "Return JSON with exactly these keys: "
+            "`astronomical` Astronomical notable (if no event, give timeless sky reflection), "
+            "`action` Suggested mystical action (personalize if zodiac sign given), "
+            "`fact` Mystical fact of the day about magick, alchemy, or esoteric traditions."
+                    "Keep each concise and inspiring.. "
+
+        )
+
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=300,
+            temperature=0.7
+        )
+
+        # Debug raw Groq output
+        print("[DEBUG] Raw Groq mystical response:", response)
+
+        content = response.choices[0].message.content.strip()
+        print("[DEBUG] Extracted content string:", content)
+
+        try:
+            data = json.loads(content)
+        except json.JSONDecodeError:
+            print("[ERROR] Groq did not return valid JSON, falling back.")
+            data = {
+                "astronomical": "The Moon is waxing, symbolizing growth and intention setting.",
+                "action": "Light a candle and meditate for 5 minutes to align with today's lunar energy.",
+                "fact": "Alchemy once aimed to transform lead into gold, both literally and spiritually."
+            }
+
+    except Exception as e:
+        print(f"[ERROR] Failed to get Groq mystical content: {e}")
+        data = {
+            "astronomical": "The Moon is waxing, symbolizing growth and intention setting.",
+            "action": "Light a candle and meditate for 5 minutes to align with today's lunar energy.",
+            "fact": "Alchemy once aimed to transform lead into gold, both literally and spiritually."
+        }
+
+    cache.set(cache_key, data, timeout=60*60*24)
+    return data
 
 
 
-def get_daily_content(mode):
+
+
+
+def get_daily_content(request, mode):
     if mode == 'philosophical':
+        daily = get_daily_philosophy_content(request)
         return {
             'title': '🤔 Philosophical Focus',
-            'content': get_daily_philosophy_prompt(),  # This calls the API
+            'question_content': daily['question'],
+            'fact_content': daily['fact'],
             'subtitle': 'Daily contemplation'
+        }
+    elif mode == 'mystical':
+        daily = get_daily_mystical_content(request)
+        print("[DEBUG] Mystical daily data:", daily)  #
+        return {
+            'title': '🌙 Mystical Focus',
+            'astronomical': daily['astronomical'],
+            'action': daily['action'],
+            'fact': daily['fact']
         }
