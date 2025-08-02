@@ -227,7 +227,7 @@ def get_daily_mystical_content(request):
         prompt = (
             "Return JSON with exactly these keys: "
             "`astronomical` Astronomical notable (if no event, give timeless sky reflection), "
-            "`action` Suggested mystical action (personalize if zodiac sign given), "
+            "`action` Suggested mystical action, "
             "`fact` Mystical fact of the day about magick, alchemy, or esoteric traditions."
                     "Keep each concise and inspiring.. "
 
@@ -268,25 +268,99 @@ def get_daily_mystical_content(request):
     return data
 
 
+def get_daily_content_from_db(request, mode_slug, personalization_data=None):
+    """
+    Retrieve daily content with fallback chain:
+    1. Personalized content (if personalization_data provided)
+    2. Global content from DB
+    3. Generated content (existing Groq logic)
+    """
+    from .models import DailyContent
 
+    # Get user's local date
+    user_tz = getattr(request.user.userprofile, 'timezone', 'UTC') if request.user.is_authenticated else 'UTC'
+    tz = pytz.timezone(user_tz)
+    today = datetime.now(tz).date()
 
+    try:
+        mode = JournalMode.objects.get(slug=mode_slug)
+
+        # Try personalized first (if requested)
+        if personalization_data:
+            personalized_content = DailyContent.objects.filter(
+                mode=mode,
+                date=today,
+                content_type='personalized',
+                personalization_key=personalization_data.get('key')
+            ).first()
+
+            if personalized_content:
+                return personalized_content.content_data
+
+        # Fall back to global content
+        global_content = DailyContent.objects.filter(
+            mode=mode,
+            date=today,
+            content_type='global'
+        ).first()
+
+        if global_content:
+            return global_content.content_data
+
+    except JournalMode.DoesNotExist:
+        pass
+
+    # Final fallback: generate using existing logic
+    print(f"[DEBUG] No DB content found for {mode_slug} on {today}, generating via API")
+
+    # if mode_slug == 'mystical':
+    #     return get_daily_mystical_content(request)
+    # elif mode_slug == 'philosophical':
+    #     return get_daily_philosophy_content(request)
+
+    return {}
 
 
 def get_daily_content(request, mode):
-    if mode == 'philosophical':
-        daily = get_daily_philosophy_content(request)
-        return {
-            'title': '🤔 Philosophical Focus',
-            'question_content': daily['question'],
-            'fact_content': daily['fact'],
-            'subtitle': 'Daily contemplation'
-        }
-    elif mode == 'mystical':
-        daily = get_daily_mystical_content(request)
-        print("[DEBUG] Mystical daily data:", daily)  #
-        return {
-            'title': '🌙 Mystical Focus',
-            'astronomical': daily['astronomical'],
-            'action': daily['action'],
-            'fact': daily['fact']
-        }
+    """Updated to use DB-first approach"""
+    content_data = get_daily_content_from_db(request, mode)
+    if content_data:
+        if mode:
+            return {
+                'title': '🤔 Philosophical Focus',
+                'question_content': content_data.get('question', 'What does it mean to live authentically?'),
+                'action': content_data.get('action', 'Fallback action.'),
+                'fact_content': content_data.get('fact', 'Socrates believed wisdom begins with recognizing ignorance.'),
+                'subtitle': 'Daily contemplation'
+            }
+        elif mode == 'mystical':
+            return {
+                'title': '🌙 Mystical Focus',
+                'astronomical': content_data.get('astronomical', 'The Moon is waxing, symbolizing growth.'),
+                'action': content_data.get('action', 'Light a candle and meditate for 5 minutes.'),
+                'fact': content_data.get('fact',
+                                         'Alchemy aimed to transform lead into gold, both literally and spiritually.')
+            }
+
+        return {}
+    print(f"Your Date/Time Clock is behind!")
+
+
+# def get_daily_content(request, mode):
+#     if mode == 'philosophical':
+#         daily = get_daily_philosophy_content(request)
+#         return {
+#             'title': '🤔 Philosophical Focus',
+#             'question_content': daily['question'],
+#             'fact_content': daily['fact'],
+#             'subtitle': 'Daily contemplation'
+#         }
+#     elif mode == 'mystical':
+#         daily = get_daily_mystical_content(request)
+#         print("[DEBUG] Mystical daily data:", daily)  #
+#         return {
+#             'title': '🌙 Mystical Focus',
+#             'astronomical': daily['astronomical'],
+#             'action': daily['action'],
+#             'fact': daily['fact']
+#         }

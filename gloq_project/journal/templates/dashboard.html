@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div id="journal_container" class="{{ mode_styler.background_class }}>
-<div class="min-h-screen bg-gray-50 {{ mode_styler.background_class }}">
+<div id="journal_container" class="rounded-2xl">
+<div class="min-h-screen">
   
  <!-- Header with Logo/Slogan and Mode Selector -->
+  <div class="mode-header bg-purple-50 rounded-2xl">
+  
 <div class="max-w-6xl mx-auto px-4 py-6">
   <div class="flex justify-between items-center">
     
@@ -42,10 +44,11 @@
     </div>
   </div>
 </div>
+</div>
 
 
   <!-- Main Content Grid -->
-
+<div class="main-content">
   <div class="max-w-6xl mx-auto px-4 pb-8">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       
@@ -53,7 +56,8 @@
       <div class="lg:col-span-2 space-y-6">
 
         <!-- New Entry Card -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+         <hr>
+       <div class="bg-white rounded-lg shadow-sm border border-gray-200">
           <div class="p-6 border-b border-gray-200">
             <div class="flex items-center justify-between">
               <h2 class="text-lg font-medium text-gray-900">New Entry</h2>
@@ -71,7 +75,7 @@
         </div>
 <div id="form-alerts"></div>
         <!-- Mode Features / AI Insights Container -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="{{ mode_styler.feature_card_class|default:'bg-white shadow-sm border border-gray-200' }} rounded-lg p-6">
           <div class="p-6 border-b border-gray-200">
             <h3 class="text-lg font-medium text-gray-900" id="content-title">Mode Features</h3>
           </div>
@@ -90,7 +94,7 @@
       <div class="space-y-6">
 
         <!-- AI Insights -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mt-4">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
               <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -199,6 +203,7 @@
 
       </div>
     </div>
+  </div>
   </div>
   
   <!-- Hidden container for loading AI insights -->

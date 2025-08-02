@@ -206,7 +206,7 @@ def switch_mode_dynamic(request):
         response['HX-Trigger-After-Swap'] = json.dumps({
             "updateTheme": {
                 "mode_slug": mode_slug,
-                "background_class": mode_styler['background_class'],
+                # "background_class": mode_styler['background_class'],
                 "mode_name": mode.name
             }
         })
@@ -461,3 +461,20 @@ def filter_entries_by_date(request):
     })
 
 
+
+
+# INSERT INTO journal_journalmode (name, description, is_premium, is_active, slug, created_at)
+# VALUES
+# ('Medical', 'Focuses on health, wellness, and self-care insights from your daily entries.', false, true, 'medical', NOW()),
+# ('Creative', 'Explores your day through storytelling, imagination, and artistic expression.', false, true, 'creative', NOW()),
+# ('Productive', 'Emphasizes efficiency, discipline, and meaningful results from daily actions.', false, true, 'productive', NOW()),
+# ('Exploratory', 'Encourages curiosity, learning, and discovery in your daily experiences.', false, true, 'exploratory', NOW()),
+# ('Visionary', 'Connects your present actions to your long-term dreams and aspirations.', false, true, 'visionary', NOW());
+#
+#
+#
+# INSERT INTO journal_journalmode (name, description, is_premium, is_active, slug, created_at)
+# VALUES
+# ('Spiritual', 'Connect daily life to deeper meaning, inner wisdom, and a sense of the sacred.', false, true, 'spiritual', NOW());
+#
+# SELECT * FROM django_cache;

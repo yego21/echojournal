@@ -1,15 +1,25 @@
-{% if active_mode.slug == "philosophical" %}
+{% if active_mode.slug %}
   <!-- Question -->   
-  <div class="{{ feature_styles.question_container }}">
+ <div class="{{ feature_styles.question_container }}">
+  <!-- Question -->
   <h4 class="{{ feature_styles.title }}">
     {{ feature_content.title }}
   </h4>
   <p class="{{ feature_styles.text }}">
     {{ feature_content.question_content }}
   </p>
-  
-  <hr class="my-3 border-blue-200">
-  
+</div>
+
+<hr class="my-3">
+
+<!-- Action -->
+<div class="{{ feature_styles.action_container }}">
+  <h4 class="{{ feature_styles.title }}">🔮 Suggested Action</h4>
+  <p class="{{ feature_styles.text }}">{{ feature_content.action }}</p>
+</div>
+
+<!-- Fact -->
+<div class="{{ feature_styles.fact_container }}">
   <div class="flex items-center">
     <span class="mr-2">📜</span>
     <span class="{{ feature_styles.fact_title }}">Daily Insight</span>

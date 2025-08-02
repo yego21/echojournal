@@ -28,6 +28,32 @@ class JournalEntry(models.Model):
         ordering = ['-created_at']
 
 
+class DailyContent(models.Model):
+    CONTENT_TYPES = [
+        ('global', 'Global'),
+        ('zodiac', 'Zodiac-specific'),
+        ('personalized', 'User-personalized'),
+    ]
+
+    mode = models.ForeignKey(JournalMode, on_delete=models.CASCADE)
+    date = models.DateField()
+    content_type = models.CharField(max_length=20, choices=CONTENT_TYPES, default='global')
+    personalization_key = models.CharField(max_length=100, blank=True, null=True)
+    content_data = models.JSONField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['mode', 'date', 'content_type', 'personalization_key']
+        indexes = [
+            models.Index(fields=['mode', 'date', 'content_type']),
+        ]
+
+    def __str__(self):
+        return f"{self.mode.name} - {self.date} ({self.content_type})"
+
+
+
+
 
 
 
