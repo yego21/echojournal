@@ -10,7 +10,7 @@ class JournalEntryForm(forms.ModelForm):
             'content': forms.Textarea(attrs={
                 'rows': 3,
                 'class': 'form-control',
-                'placeholder': 'Write your journal entry here...'
+                'placeholder': 'Write your journal entry here...',
             }),
         }
 

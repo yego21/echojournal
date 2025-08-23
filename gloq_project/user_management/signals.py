@@ -9,3 +9,17 @@ User = get_user_model()
 def create_user_plan(sender, instance, created, **kwargs):
     if created:
         UserPlan.objects.create(user=instance)
+
+
+
+# To disable signals
+def disable_signals():
+    """Temporarily disable signal handlers"""
+    post_save.disconnect(create_user_plan, sender=User)
+    post_save.disconnect(create_user_plan, sender=User)
+
+# To enable signals
+def enable_signals():
+    """Reconnect signal handlers after data is loaded"""
+    post_save.connect(create_user_plan, sender=User)
+    post_save.disconnect(create_user_plan, sender=User)

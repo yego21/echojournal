@@ -6,7 +6,7 @@ from django.utils.timezone import now
 import pytz
 from django.shortcuts import render, redirect
 from .forms import JournalEntryForm
-from .models import JournalEntry, JournalMode
+from .models import JournalEntry, JournalMode, Tag
 from django.template.loader import render_to_string
 from django.http import HttpResponse
 # from openai import OpenAI
@@ -30,17 +30,19 @@ from .utils import get_current_mode, set_mode_for_user, get_mode_styler_context,
 from .mode_styler import get_feature_styles
 from .context_processors import active_mode
 from django.views.decorators.http import require_POST
+from django.db.models.functions import TruncDate
+from django.utils.dateparse import parse_date
 
 
 
 @login_required
 def load_insight_panel(request):
-    return render(request, 'journal/insights/insight_panel.html')
+    return render(request, 'journal/ai_insights/insight_panel.html')
 
 @login_required
 def load_insight_tab(request, tab_name):
     # You can route logic here later, for now just echo the tab
-    return render(request, f'journal/insights/_{tab_name}.html')
+    return render(request, f'journal/ai_insights/_{tab_name}.html')
 
 
 def generate_summary_by_mode_and_type(entries, mode_slug, synthesis_type):
@@ -77,7 +79,7 @@ def synthesize_entries(request):
     # Generate based on mode + type combination
     summary = generate_summary_by_mode_and_type(entries, mode_slug, synthesis_type)
 
-    return render(request, 'journal/_synthesis.html', {
+    return render(request, 'journal/ai_insights/_synthesis.html', {
         'synthesis': summary,
         'synthesis_type': synthesis_type,
         'mode': mode_slug
@@ -179,7 +181,7 @@ def mode_explorer(request):
     modes = JournalMode.objects.all()
     active_mode = get_active_mode(request)
     mode_styler = get_mode_styler_context(active_mode)
-    return render(request, "journal/mode_explorer.html", {
+    return render(request, "journal/modes/mode_explorer.html", {
         "modes": modes,
         "active_mode": active_mode,
         'mode_styler': mode_styler,
@@ -254,7 +256,7 @@ def _mode_banner(request):
     # Don't update session here - switch_mode_dynamic already did it
 
     mode_styler = get_mode_styler_context(mode_slug)
-    return render(request, "journal/_mode_banner.html", {
+    return render(request, "journal/modes/_mode_banner.html", {
         "mode_styler": mode_styler,
         'selected_mode': mode,
     })
@@ -282,7 +284,7 @@ def _mode_features(request):
     feature_styles = get_feature_styles(active_mode)
     feature_content = get_daily_content(request, mode_slug)
     print(f"DEBUG: Resolved active_mode features = {active_mode}")
-    return render(request, "journal/_mode_features.html", {
+    return render(request, "journal/modes/_mode_features.html", {
         "mode_styler": mode_styler,
         'selected_mode': mode,
         'feature_styles': feature_styles,
@@ -361,9 +363,12 @@ def submit_journal_entry(request):
         entry.user = request.user
         entry.save()
 
-        # Tagging and save again
-        entry.tags = extract_tags(entry)
-        entry.save()
+        # Extract tags
+        extracted_tags = extract_tags(entry)
+
+        for tag_name in extracted_tags:
+            tag_obj, created = Tag.objects.get_or_create(name=tag_name)
+            entry.tags.add(tag_obj)
 
         return JsonResponse({
             "success": True,
@@ -443,29 +448,127 @@ def same_day_entries(request):
 
 
 
-@login_required
-def filter_entries_by_date(request):
-    date_str = request.GET.get('entry-date')
-    if not date_str:
-        return HttpResponseBadRequest("Missing date.")
+# @login_required
+# def fetch_entries_by_range(request):
+#     start_str = request.GET.get('start-date')
+#     end_str = request.GET.get('end-date')
+#
+#     if not start_str or not end_str:
+#         return HttpResponseBadRequest("Missing start or end date.")
+#
+#     try:
+#         # Parse into date objects
+#         start_date = datetime.strptime(start_str, "%Y-%m-%d").date()
+#         end_date = datetime.strptime(end_str, "%Y-%m-%d").date()
+#     except ValueError:
+#         return HttpResponseBadRequest("Invalid date format. Expected YYYY-MM-DD.")
+#
+#     # Ensure proper ordering (if user swaps the range)
+#     if start_date > end_date:
+#         start_date, end_date = end_date, start_date
+#
+#     # Create timezone-aware datetime range
+#     start = dj_timezone.make_aware(datetime.combine(start_date, time.min))
+#     end = dj_timezone.make_aware(datetime.combine(end_date, time.max))
+#
+#     entries = (
+#         JournalEntry.objects
+#         .filter(user=request.user, created_at__range=(start, end))
+#         .order_by('-created_at')
+#     )
+#
+#     return render(request, 'journal/partials/_entries.html', {
+#         'entries': entries,
+#         # can_add stays per *day*, but in range view it’s tricky,
+#         # so we just return False or skip it unless you want per-day logic
+#         'can_add': False,
+#     })
 
-    entry_date = datetime.strptime(date_str, "%Y-%m-%d").date()
-    start = dj_timezone.make_aware(datetime.combine(entry_date, time.min))
-    end = dj_timezone.make_aware(datetime.combine(entry_date, time.max))
 
-    entries = JournalEntry.objects.filter(user=request.user, created_at__range=(start, end)).order_by('-created_at')
+def search_modal(request):
+    # Lightweight modal with two date pickers
+    return render(request, "journal/search/_search_modal.html")
 
-    return render(request, 'journal/_entries.html', {
-        'entries': entries,
-        'can_add': entries.count() < 3,
-    })
+def search_results(request):
+    start_raw = request.GET.get("start")
+    end_raw   = request.GET.get("end")
+    tag_id    = request.GET.get("tag_filter")  # new
 
+    start_date = parse_date(start_raw) if start_raw else None
+    end_date   = parse_date(end_raw) if end_raw else None
+
+    error = None
+    if not start_date or not end_date:
+        error = "Pick both start and end dates."
+    elif start_date > end_date:
+        error = "Start date cannot be after end date."
+
+    entries = []
+    if not error:
+        qs = (
+            JournalEntry.objects
+            .filter(user=request.user, created_at__date__range=(start_date, end_date))
+            .annotate(day=TruncDate("created_at"))
+            .order_by("-day", "-created_at")
+        )
+        if tag_id:  # only apply if selected
+            qs = qs.filter(tags__id=tag_id)
+        entries = qs
+
+    ctx = {
+        "entries": entries,
+        "start_date": start_date,
+        "end_date": end_date,
+        "tag_id": tag_id,   # so template knows what's selected
+        "error": error,
+        "tags": Tag.objects.all(),  # for dropdown
+    }
+    return render(request, "journal/search/_search_results.html", ctx)
+
+
+def filter_results_by_tag(request):
+    """Handle tag filtering within modal"""
+    tag_id = request.GET.get("tag_filter")
+    start_date_str = request.GET.get("start_date")
+    end_date_str = request.GET.get("end_date")
+
+    # Parse dates
+    start_date = parse_date(start_date_str) if start_date_str else None
+    end_date = parse_date(end_date_str) if end_date_str else None
+
+    entries = JournalEntry.objects.filter(user=request.user)
+
+    # Apply date filter
+    if start_date and end_date:
+        entries = entries.filter(created_at__date__range=(start_date, end_date))
+
+    # Apply tag filter
+    if tag_id:
+        try:
+            entries = entries.filter(tags__id=int(tag_id))
+        except (ValueError, TypeError):
+            pass
+
+    entries = entries.annotate(day=TruncDate("created_at")).order_by("-day", "-created_at")
+
+    ctx = {
+        "entries": entries,
+        "tag_id": tag_id,
+        "start_date": start_date,
+        "end_date": end_date,
+        "tags": Tag.objects.all(),
+    }
+    return render(request, "journal/search/_search_result_by_tag_mood.html", ctx)
+
+def entry_detail(request, pk):
+    entry = get_object_or_404(JournalEntry, pk=pk, user=request.user)
+    return render(request, "journal/search/_entry_detail_modal.html", {"entry": entry})
 
 
 
 # INSERT INTO journal_journalmode (name, description, is_premium, is_active, slug, created_at)
 # VALUES
-# ('Medical', 'Focuses on health, wellness, and self-care insights from your daily entries.', false, true, 'medical', NOW()),
+# ('Medical', 'Focuses on health, wellness, and self-care ai_insights from your daily entries.', false, true, 'medical', NOW()),
 # ('Creative', 'Explores your day through storytelling, imagination, and artistic expression.', false, true, 'creative', NOW()),
 # ('Productive', 'Emphasizes efficiency, discipline, and meaningful results from daily actions.', false, true, 'productive', NOW()),
 # ('Exploratory', 'Encourages curiosity, learning, and discovery in your daily experiences.', false, true, 'exploratory', NOW()),

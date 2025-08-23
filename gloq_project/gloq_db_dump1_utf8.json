@@ -1,0 +1,1903 @@
+﻿[
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$jd2oiqbEqmwnBOZnwzbpiS$3go0niTqZYynUeGyNbV6FlZ+w1P/PECnpNsODNni6CA=",
+        "last_login": "2025-08-09T03:03:12.461Z",
+        "is_superuser": true,
+        "username": "admin",
+        "first_name": "admin",
+        "last_name": "ko",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-07-15T08:03:40Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$B5aV86d9VvzbCx7j8uZwkj$tiFVxcgoSu3kppqaaf0DnuVOLoPOVuEhGi37l6QG4uA=",
+        "last_login": "2025-07-19T05:02:38.684Z",
+        "is_superuser": false,
+        "username": "s1",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-07-16T02:00:48Z",
+        "groups": [],
+        "user_permissions": [
+            [
+                "add_logentry",
+                "admin",
+                "logentry"
+            ],
+            [
+                "change_logentry",
+                "admin",
+                "logentry"
+            ],
+            [
+                "delete_logentry",
+                "admin",
+                "logentry"
+            ],
+            [
+                "view_logentry",
+                "admin",
+                "logentry"
+            ],
+            [
+                "add_journalentry",
+                "journal",
+                "journalentry"
+            ],
+            [
+                "change_journalentry",
+                "journal",
+                "journalentry"
+            ],
+            [
+                "delete_journalentry",
+                "journal",
+                "journalentry"
+            ],
+            [
+                "view_journalentry",
+                "journal",
+                "journalentry"
+            ],
+            [
+                "change_userplan",
+                "user_management",
+                "userplan"
+            ],
+            [
+                "view_userplan",
+                "user_management",
+                "userplan"
+            ],
+            [
+                "view_userprofile",
+                "userprofile",
+                "userprofile"
+            ]
+        ]
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$iSGN1ilAkubeF5wl1e0pQ4$EnWEP6nCHHKQRt5U2MPG/Fr6C/OgbxnKyi+JCZMx28A=",
+        "last_login": "2025-07-18T00:30:18.386Z",
+        "is_superuser": false,
+        "username": "s2",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-07-16T02:09:15Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$VtLzUtjFNByiNfYDaDS3cp$Av9tFvJQaQ8MXFP5P88mx5LUwwAPHF4Ha7fT5SHq54Y=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "s3",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-07-16T04:06:01.075Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$hKGinBDzU7U44cnzKwULKq$JYmga7MzKKBv9jenUe24MItehNvyRtWZGAfrjHgV9b8=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "s4",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-07-16T04:06:45.679Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$hFndEc3depJrbmJ9bf9Et8$FuHbD9ZJ9JZAmoe6iBwzZWDt+JPXB11DKuRVeAnxbrw=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "s6",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-07-17T02:02:09.075Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$U6ic7PdPTtbsHdezPA4w75$E6GFJIGRp5WZSNIqrdsNZWAMSB+h76Hk4Hm+dG82VTI=",
+        "last_login": "2025-07-19T06:59:06.958Z",
+        "is_superuser": false,
+        "username": "s5",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-07-19T05:06:32.262Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "0y9lhp2rwv5fvjnlchgqxdwyoahd7qky",
+    "fields": {
+        "session_data": ".eJxdjs0OwiAQhN-Fs6nU_gS86d2TD9Asy1JQCk1pLxrfXWp6qadNZr6dmTeb3UCvGIid2SU5ON5d6GGME7ED62CZbbckmjqnM1DuNQX4pLAa-gGhjwXGME9OFStSbG4qblGTv27sLsBCsvm75iAaYxRK3oiGg0JenqREaYgEKtmWqqpLWWleVUi1ErLRAgEFYcu1NDk0kSecSXdDLvuNPf2LyS99Lhut8zHFfBA8-3wBT0tXNg:1uhlbr:iQ1ow9RZnFff3diRWtH_oIK8YklzTecHlfxdzG8Dq7A",
+        "expire_date": "2025-08-15T08:59:27.980Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "8csj7pny4l3r4ghi64wtkcakt9dp2jj8",
+    "fields": {
+        "session_data": "eyJ0aW1lem9uZSI6IkFzaWEvU2luZ2Fwb3JlIn0:1ujvCX:7gBnU-k9PX88DJDHxDqBAzM-xA2eJwYfB8vAWhVhXkY",
+        "expire_date": "2025-08-21T07:38:13.442Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "bs72d6kwjrn7y8i9balbg12n3zvmkv2v",
+    "fields": {
+        "session_data": ".eJxVjbsSwiAURP-F2olgHgN22lv5AczlcknQBJxACnX8d8lMmrS7Z89-WfYTfWIgdmaX5OF496GHV5yJHZiGJQ96STRrbwsg9pkBfFJYC_uA0McKY8izN9WKVFubqlu0NF43dicYIA1l3XCQrXMGFW9ly8EgFyelUDkiiUZ1wtSNULXldY3UGKlaKxFQEnbcKlekiUbCTFZP5UyncemLd3qn7BFG9vsD96pN2A:1ufaMC:0s0v232L2eQuIvGWCoocRNGJ-QFfJ5S1UXYGMMLa8W8",
+        "expire_date": "2025-08-09T08:34:16.371Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "edck8whln3hq4fb4w1n0aktx2beteczn",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hCQ0jAu3XsGMjMMUjWQlHbVeHdt0oVu_3vvbyriupS4dpnjlNRFWXX63Qj5KXUH6YH13jS3uswT6V3RB-361pK8rof7d1Cwl289GAw-Z2IwPniDxMaeARiySGCC0ZIbLLhknGMZKIBPgZGD8GgSZPX-AOxrOG8:1ud1Xb:uw-sCwpm2VO1VDxDhvW8xByvekw4e9l8XAKFIgF-Ph4",
+        "expire_date": "2025-08-02T06:59:27.027Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "h6x08bj9uzntjcb8x24fgf0wq2a26cfi",
+    "fields": {
+        "session_data": ".eJxVjbsSwiAURP-F2olgHgN22lv5AczlcknQBJxACnX8d8lMmrS7Z89-WfYTfWIgdmaX5OF496GHV5yJHZiGJQ96STRrbwsg9pkBfFJYC_uA0McKY8izN9WKVFubqlu0NF43dicYIA1l3XCQrXMGFW9ly8EgFyelUDkiiUZ1wtSNULXldY3UGKlaKxFQEnbcKlekiUbCTFZP5UyncemLd3qn7BFG9vsD96pN2A:1ugg4a:FfitSvC8wtONPNhINkBkg-3weMYQ9d0uQi5pvQk9gMQ",
+        "expire_date": "2025-08-12T08:52:36.478Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "ivmaa5sse1it8jretrtjvcxyca69qnps",
+    "fields": {
+        "session_data": ".eJxVjUEOwiAURO_C2lQqpQF3unflAcjn89uiLZhCF2q8uzTpptuZN2--LPuJPjEQO7NL8nC8-9DDK87EDszAkgezJJqNdwWo95kFfFJYC_eA0McKY8izt9WKVFubqlt0NF43dicYIA1l3XBQsussai6V5GCR1yetUXdECq1uayuaWgvHhUBqrNLSKQRUhC13uivSRCNhJmemclaU0ztljzCy3x9x5ku-:1ueUxq:68TqSH60y_iltQLWOFcOHMxZ6ww9k6JJ7A4SJRso8ww",
+        "expire_date": "2025-08-06T08:36:38.081Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "l8wfi5wxmrvnqc9me7u4sp5jv8ghipv2",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hCQ0jAu3XsGMjMMUjWQlHbVeHdt0oVu_3vvbyriupS4dpnjlNRFWXX63Qj5KXUH6YH13jS3uswT6V3RB-361pK8rof7d1Cwl289GAw-Z2IwPniDxMaeARiySGCC0ZIbLLhknGMZKIBPgZGD8GgSZPX-AOxrOG8:1ucx6v:RvhJopeVMQC4oWhkr_A2lq8vdSwI3Zc5tPYq-RDYvHk",
+        "expire_date": "2025-08-02T02:15:37.491Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "nvpgk3za572ckx4u5f6rf3ev4318rwfo",
+    "fields": {
+        "session_data": ".eJxdjsEOgjAQRP-lZ4PFAmm96d2TH9BstwtUS0soXDT-u8VwwdMmM29n5s1mN9ArBmJndkkOjncXOhjjROzANCxzr5dEk3Y2A-VeM4BPCqthHxC6WGAM8-RMsSLF5qbiFi3568buAnpIff6uOMi6bQ0qXsuag0FenpRC1RJJNKopjahKJSwXAqkyUtVWIqAkbLhVbQ5N5AlnsnrIZb-xzb-Y_NLlsrF3PqaYD4Jnny9P51c6:1ui7vH:hvQ3EU0j9znu4nR-FZN53GCFtQk3rdWOP3eAYzuq8YA",
+        "expire_date": "2025-08-16T08:48:59.656Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "nzbpzj9nafbey5js7ruoqx50punodwqb",
+    "fields": {
+        "session_data": ".eJxdjrsSwiAQRf-F2kFiHgN22lv5AZllWRI0gUwgjY7_LnHSxPbecx9vltxIr-CJndklOjjene9gCjOxA2thSX27RJpbZzJQ7DUN-CS_GuYBvgscg0-z03xF-OZGfguGhuvG7gp6iH1OVwJkba1GJWpZC9AoipNSqCyRRK2aQpdVoUojyhKp0lLVRiKgJGyEUTaXRhoIE5l2zGO_s_JfjMPS5bE4udmlBQb2-QL1RVWq:1ui7dc:A-x4AUFI3BGrPz76gHmGFSqsJNebTFboLyZrfM5CG1Q",
+        "expire_date": "2025-08-16T08:30:44.620Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "x4uvanz3vaktdk9dxv72y2xcb1l7xk19",
+    "fields": {
+        "session_data": ".eJxdjs0SgiAUhd-FdWMY6kC72rfqAZzL5aqUggO4qendw8aNbc_5zs-bJTvRyztiZ3aJFo5363qYfSB2YC0saWiXSKG1JgPlXtOAT3KrYR7gel-gdylYXaxIsbmxuHlD43VjdwUDxCGnKw6y7jqNitey5qCRlyelUHVEErVqSi2qUgnDhUCqtFS1kQgoCRtuVJdLI42EiUw75bHfWfEvxnHp81icbbBpgZF9vvSWVaU:1ulf1r:V-dJ52N_bM9iQHSXz6W0g8VuiJeWgK84FeS2TheWs-w",
+        "expire_date": "2025-08-26T02:46:23.930Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "yiigshtnrwqrwtqc9yn4r4ihgzqjgiim",
+    "fields": {
+        "session_data": ".eJxdjs0SgiAUhd-FdWMY4kC72rfqAZzL5aqUgiPYoqZ3Dxs3tT3nOz8vltxIz-CJHdkpOthfne9gCjOxHWtgSX2zRJobZzNQ_moG8E5-NewNfBcKDD7NzhQrUmxuLC7B0nDe2J-CHmKf0xUHJdvWoOZSSQ4GeXnQGnVLpNDoujSiKrWwXAikyigtrUJARVhzq9tcGmkgTGSbMY99z8p_MQ5Ll8emOdgFk3sQe38ASwVWDw:1ui7Ro:lf_aJZebWN6mshDFOgr289AeXLqCykghywmDVP4OcFw",
+        "expire_date": "2025-08-16T08:18:32.886Z"
+    }
+},
+{
+    "model": "journal.journalmode",
+    "pk": 1,
+    "fields": {
+        "name": "Mystical",
+        "description": "",
+        "is_premium": false,
+        "is_active": true,
+        "slug": "mystical",
+        "created_at": "2025-07-23T02:44:23.848Z"
+    }
+},
+{
+    "model": "journal.journalmode",
+    "pk": 2,
+    "fields": {
+        "name": "Philosophical",
+        "description": "",
+        "is_premium": false,
+        "is_active": true,
+        "slug": "philosophical",
+        "created_at": "2025-07-23T03:02:29.176Z"
+    }
+},
+{
+    "model": "journal.journalmode",
+    "pk": 3,
+    "fields": {
+        "name": "Medical",
+        "description": "Focuses on health, wellness, and self-care insights from your daily entries.",
+        "is_premium": false,
+        "is_active": true,
+        "slug": "medical",
+        "created_at": "2025-08-01T05:52:23.128Z"
+    }
+},
+{
+    "model": "journal.journalmode",
+    "pk": 4,
+    "fields": {
+        "name": "Creative",
+        "description": "Explores your day through storytelling, imagination, and artistic expression.",
+        "is_premium": false,
+        "is_active": true,
+        "slug": "creative",
+        "created_at": "2025-08-01T05:52:23.128Z"
+    }
+},
+{
+    "model": "journal.journalmode",
+    "pk": 5,
+    "fields": {
+        "name": "Productive",
+        "description": "Emphasizes efficiency, discipline, and meaningful results from daily actions.",
+        "is_premium": false,
+        "is_active": true,
+        "slug": "productive",
+        "created_at": "2025-08-01T05:52:23.128Z"
+    }
+},
+{
+    "model": "journal.journalmode",
+    "pk": 6,
+    "fields": {
+        "name": "Exploratory",
+        "description": "Encourages curiosity, learning, and discovery in your daily experiences.",
+        "is_premium": false,
+        "is_active": true,
+        "slug": "exploratory",
+        "created_at": "2025-08-01T05:52:23.128Z"
+    }
+},
+{
+    "model": "journal.journalmode",
+    "pk": 7,
+    "fields": {
+        "name": "Visionary",
+        "description": "Connects your present actions to your long-term dreams and aspirations.",
+        "is_premium": false,
+        "is_active": true,
+        "slug": "visionary",
+        "created_at": "2025-08-01T05:52:23.128Z"
+    }
+},
+{
+    "model": "journal.journalmode",
+    "pk": 8,
+    "fields": {
+        "name": "Spiritual",
+        "description": "Connect daily life to deeper meaning, inner wisdom, and a sense of the sacred.",
+        "is_premium": false,
+        "is_active": true,
+        "slug": "spiritual",
+        "created_at": "2025-08-01T06:06:40.684Z"
+    }
+},
+{
+    "model": "journal.journalentry",
+    "pk": 73,
+    "fields": {
+        "user": [
+            "admin"
+        ],
+        "mode": null,
+        "label": null,
+        "content": "WAHAHAHA IT WORKED!",
+        "tags": "['excitement', 'triumph']",
+        "created_at": "2025-07-26T05:37:18.483Z"
+    }
+},
+{
+    "model": "journal.journalentry",
+    "pk": 74,
+    "fields": {
+        "user": [
+            "admin"
+        ],
+        "mode": null,
+        "label": null,
+        "content": "haha",
+        "tags": "['amusement', 'joy']",
+        "created_at": "2025-07-29T03:31:32.987Z"
+    }
+},
+{
+    "model": "journal.journalentry",
+    "pk": 75,
+    "fields": {
+        "user": [
+            "admin"
+        ],
+        "mode": null,
+        "label": null,
+        "content": "I am amazing!",
+        "tags": "['confidence', 'self-empowerment']",
+        "created_at": "2025-07-30T03:24:43.451Z"
+    }
+},
+{
+    "model": "journal.journalentry",
+    "pk": 79,
+    "fields": {
+        "user": [
+            "admin"
+        ],
+        "mode": null,
+        "label": null,
+        "content": "hahha",
+        "tags": "['amusement', 'joy']",
+        "created_at": "2025-07-30T03:33:35.761Z"
+    }
+},
+{
+    "model": "journal.journalentry",
+    "pk": 82,
+    "fields": {
+        "user": [
+            "admin"
+        ],
+        "mode": null,
+        "label": null,
+        "content": "hahaha",
+        "tags": "['amusement', 'joy']",
+        "created_at": "2025-07-30T03:42:47.083Z"
+    }
+},
+{
+    "model": "journal.journalentry",
+    "pk": 83,
+    "fields": {
+        "user": [
+            "admin"
+        ],
+        "mode": null,
+        "label": null,
+        "content": "Wow",
+        "tags": "['amazement', 'surprise']",
+        "created_at": "2025-08-01T08:58:40.260Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 27,
+    "fields": {
+        "mode": 1,
+        "date": "2025-08-01",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "Alchemy seeks to transform base metal into gold, a metaphor for spiritual transmutation of the self",
+            "action": "Meditate under the light of the full moon to tap into the feminine divine",
+            "astronomical": "Perseid meteor shower peaks in August, celestial ballet of shooting stars"
+        },
+        "created_at": "2025-08-02T02:27:28.852Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 28,
+    "fields": {
+        "mode": 1,
+        "date": "2025-08-02",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "The alchemical principle of sol and lunaria represents the union of opposites.",
+            "action": "Invoke the power of the stars by meditating under a full moon.",
+            "astronomical": "Aurora borealis illuminates the night sky."
+        },
+        "created_at": "2025-08-02T02:27:29.185Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 29,
+    "fields": {
+        "mode": 1,
+        "date": "2025-08-03",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "In alchemy, the philosopher's stone is believed to have the power to transform base metals into gold and grant eternal life.",
+            "action": "Meditate under the full moon and listen for the whispers of the cosmos.",
+            "astronomical": "The Andromeda Galaxy is approaching us at 250,000 miles per hour."
+        },
+        "created_at": "2025-08-02T02:28:29.271Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 30,
+    "fields": {
+        "mode": 1,
+        "date": "2025-08-04",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "The ancient Egyptians believed the Philosopher's Stone granted eternal life",
+            "action": "Practice lunar meditation during the full moon",
+            "astronomical": "Total Solar Eclipse visible across parts of Europe and Asia"
+        },
+        "created_at": "2025-08-05T03:13:07.082Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 31,
+    "fields": {
+        "mode": 1,
+        "date": "2025-08-05",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "The principle of correspondence states that all things in the macrocosm are mirrored in the microcosm",
+            "action": "Meditate under the full moon to tap into lunar energies",
+            "astronomical": "Aurora borealis illuminates the night sky"
+        },
+        "created_at": "2025-08-05T03:13:07.423Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 32,
+    "fields": {
+        "mode": 1,
+        "date": "2025-08-06",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "The philosopher's stone represents spiritual transformation and enlightenment",
+            "action": "Perform a ritual of release under the full moon",
+            "astronomical": "Pleiades star cluster shines bright in the night sky"
+        },
+        "created_at": "2025-08-05T03:13:07.731Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 33,
+    "fields": {
+        "mode": 3,
+        "date": "2025-08-01",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "The first recorded description of a surgical procedure was found in the Edwin Smith Papyrus, circa 1600 BCE.",
+            "action": "Prioritize sleep by establishing a consistent bedtime routine.",
+            "question": "What habits have you developed to maintain a healthy work-life balance over the past week?"
+        },
+        "created_at": "2025-08-02T05:26:29.259Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 34,
+    "fields": {
+        "mode": 3,
+        "date": "2025-08-02",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "The concept of germs was first described by Antonie van Leeuwenhoek in 1676, using a microscope to observe microorganisms in a variety of substances.",
+            "action": "Try doing 5 minutes of stretching exercises every hour to improve your posture and reduce eye strain.",
+            "question": "How often do you take breaks to stretch throughout your workday?"
+        },
+        "created_at": "2025-08-02T05:26:29.751Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 35,
+    "fields": {
+        "mode": 3,
+        "date": "2025-08-03",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "In 1962, American physician Ancel Keys established the Seven Countries Study, a landmark research project that linked diet and lifestyle to heart disease risk.",
+            "action": "Drink at least eight glasses of water throughout the day to maintain proper hydration and boost energy levels.",
+            "question": "What daily habits are you cultivating to prioritize your physical and mental well-being, and are there any areas for improvement?"
+        },
+        "created_at": "2025-08-02T05:26:30.602Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 36,
+    "fields": {
+        "mode": 4,
+        "date": "2025-08-01",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "The art movement 'Fauvism' emerged in the early 20th century, characterized by vivid, bold colors and energetic brushstrokes, pioneered by artists like Henri Matisse and André Derain.",
+            "action": "Free-write for 10 minutes without stopping, then illustrate your scene using only charcoal sketches.",
+            "question": "Imagine a city that blends nature and architecture, where buildings grow like trees and streets are paved with glowing stones. Describe a day in the life of a resident."
+        },
+        "created_at": "2025-08-02T05:26:31.251Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 37,
+    "fields": {
+        "mode": 4,
+        "date": "2025-08-02",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "In 1923, Salvador Dalí painted 'The Persistence of Memory,' a iconic work featuring melting clocks, which challenged traditional notions of time and reality.",
+            "action": "Write a poem using only words that start with the letter 's'.",
+            "question": "Create a short story about a character who discovers a mysterious box in their attic."
+        },
+        "created_at": "2025-08-02T05:26:31.741Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 38,
+    "fields": {
+        "mode": 4,
+        "date": "2025-08-03",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "Auguste Rodin's sculpture 'The Thinker' was originally titled 'The Poet' and was part of his larger work 'The Gates of Hell'.",
+            "action": "Create a short poem in the style of 19th-century Romanticism.",
+            "question": "Describe a cityscape at dusk, where the sky is painted with hues of crimson and gold."
+        },
+        "created_at": "2025-08-02T05:26:32.325Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 39,
+    "fields": {
+        "mode": 5,
+        "date": "2025-08-01",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "In 1920s, Ivy Lee, a well-known American productivity consultant, advised Charles M. Schwab, the president of Bethlehem Steel, to write down six things to accomplish each day, and at the end of the day, review and prioritize for the next day.",
+            "action": "Use the Eisenhower Matrix to categorize tasks into urgent vs. important and focus on the most critical ones first.",
+            "question": "What's the most effective way to prioritize tasks for a productive day?"
+        },
+        "created_at": "2025-08-02T05:26:32.982Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 40,
+    "fields": {
+        "mode": 5,
+        "date": "2025-08-02",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "In the 18th century, Benjamin Franklin used a 'to-do list' called his 'Little Things List' to keep track of small tasks and maintain productivity.",
+            "action": "Use the Eisenhower Matrix to categorize tasks into urgent vs. important and focus on the most critical ones first.",
+            "question": "How can you prioritize tasks effectively while minimizing procrastination?"
+        },
+        "created_at": "2025-08-02T05:26:33.453Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 41,
+    "fields": {
+        "mode": 5,
+        "date": "2025-08-03",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "In the 18th century, Benjamin Franklin used a set of homemade 'wastebooks' for tracking his time and tasks, laying the groundwork for modern time management systems.",
+            "action": "Use the Pomodoro Technique by working in 25-minute focused intervals, followed by a 5-minute break.",
+            "question": "How can you minimize distractions while working from home?"
+        },
+        "created_at": "2025-08-02T05:26:34.188Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 42,
+    "fields": {
+        "mode": 6,
+        "date": "2025-08-01",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "According to the McKinsey Global Institute, up to 800 million jobs could be lost worldwide due to automation by 2030, but 140 million new jobs are likely to emerge, requiring new skills and training",
+            "action": "Explore the latest reports on AI job displacement and creation",
+            "question": "What impact will the rise of AI have on human employment in the next 10 years?"
+        },
+        "created_at": "2025-08-02T05:26:34.693Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 43,
+    "fields": {
+        "mode": 6,
+        "date": "2025-08-02",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "The first artificial neural network was developed in 1943 by Warren McCulloch and Walter Pitts.",
+            "action": "Explore the potential applications of AGI and its current state of development.",
+            "question": "Is there a relationship between the current advancements in AI and the concept of artificial general intelligence?"
+        },
+        "created_at": "2025-08-02T05:26:35.175Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 44,
+    "fields": {
+        "mode": 6,
+        "date": "2025-08-03",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "In 1956, the first AI program, called Logical Theorist, was developed by Allen Newell and Herbert Simon, laying the foundation for modern AI research",
+            "action": "Explore the concept of meta-learning in AI to understand its potential and limitations",
+            "question": "Are artificial intelligence models capable of learning from past experiences like humans?"
+        },
+        "created_at": "2025-08-02T05:26:35.651Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 45,
+    "fields": {
+        "mode": 7,
+        "date": "2025-08-01",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "The first webcam was created in 1991 by Cambridge University students to monitor the coffee pot in their break room, reducing the need for frequent trips to check if coffee was ready.",
+            "action": "Develop a proof-of-concept for a smart city infrastructure utilizing AI and IoT by the end of the quarter.",
+            "question": "How can we integrate emerging technologies to create more inclusive and sustainable communities by 2030?"
+        },
+        "created_at": "2025-08-02T05:26:36.201Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 46,
+    "fields": {
+        "mode": 7,
+        "date": "2025-08-02",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "The Wright brothers' first powered flight in 1903 marked the beginning of a new era in aviation and space exploration, inspiring generations of innovators and visionaries.",
+            "action": "Design a sustainable, self-sustaining city ecosystem using green infrastructure and renewable energy sources.",
+            "question": "How will emerging technologies reshape urban planning by 2030?"
+        },
+        "created_at": "2025-08-02T05:26:36.706Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 47,
+    "fields": {
+        "mode": 7,
+        "date": "2025-08-03",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "In 1946, Vannevar Bush proposed the Memex, a hypothetical device for storing and retrieving information, influencing the development of hypertext and the modern internet.",
+            "action": "Design a prototype for a community-driven innovation hub that fosters skill-sharing and knowledge exchange.",
+            "question": "As AI and automation transform industries, what skills will be required for humans to thrive in 2050?"
+        },
+        "created_at": "2025-08-02T05:26:37.374Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 48,
+    "fields": {
+        "mode": 8,
+        "date": "2025-08-01",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "In ancient Japan, the art of Shinrin-yoku, or forest bathing, is believed to promote mental and spiritual well-being.",
+            "action": "Practice gratitude by sharing three things you're thankful for each day with a friend or family member.",
+            "question": "What does simplicity bring to your spiritual journey?"
+        },
+        "created_at": "2025-08-02T05:26:37.832Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 49,
+    "fields": {
+        "mode": 8,
+        "date": "2025-08-02",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "In ancient Japan, the art of Shinrin-yoku, or forest bathing, was a spiritual practice that connected people with nature for healing and spiritual growth.",
+            "action": "Take 5 deep breaths, focus on your inner peace, and let go of any negative thoughts or emotions.",
+            "question": "As you reflect on your life's path, what lessons have you learned from past experiences?"
+        },
+        "created_at": "2025-08-02T05:26:38.379Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 50,
+    "fields": {
+        "mode": 8,
+        "date": "2025-08-03",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "In Japan, the traditional tea ceremony is a spiritual practice that emphasizes mindfulness, respect, and harmony with nature, dating back to the 16th century.",
+            "action": "Meditate for 10 minutes on a candlelit altar, focusing on gratitude and release.",
+            "question": "What intentions do you want to carry with you into the rest of 2025?"
+        },
+        "created_at": "2025-08-02T05:26:38.877Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 51,
+    "fields": {
+        "mode": 2,
+        "date": "2025-08-01",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "In ancient Greece, the concept of 'eudaimonia' (happiness through living a virtuous life) was central to the philosophy of Aristotle, emphasizing the pursuit of well-being through self-cultivation and rational thought.",
+            "action": "Reflect on your priorities and align them with your values to live a more authentic life.",
+            "question": "What is the balance between freedom and responsibility in a world of ever-evolving choices?"
+        },
+        "created_at": "2025-08-02T05:47:14.326Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 52,
+    "fields": {
+        "mode": 2,
+        "date": "2025-08-02",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "Immanuel Kant's philosophical theory of the 'categorical imperative' was first presented in his 1785 work 'Grounding for the Metaphysics of Morals'.",
+            "action": "Practice self-awareness by regularly reflecting on your values and priorities.",
+            "question": "How do you balance individuality with the desire for community and connection?"
+        },
+        "created_at": "2025-08-02T05:47:14.685Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 53,
+    "fields": {
+        "mode": 2,
+        "date": "2025-08-03",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "In 1967, Timothy Leary published 'The Politics of Ecstasy,' advocating for the use of psychedelics as a means to expand consciousness and challenge societal norms.",
+            "action": "Cultivate gratitude for the present moment, for it is all we truly possess.",
+            "question": "What is the value of a life spent in pursuit of fleeting desires?"
+        },
+        "created_at": "2025-08-02T05:47:15.061Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 63,
+    "fields": {
+        "mode": 1,
+        "date": "2025-08-08",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "The ancient Greek philosopher, Empedocles, believed in the concept of 'pneuma,' a divine, vital energy that governed the universe.",
+            "action": "Invoke the lunar energies by practicing a midnight meditation.",
+            "astronomical": "Moon at peak crescent, illuminating the veil between worlds."
+        },
+        "created_at": "2025-08-09T03:28:10.720Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 64,
+    "fields": {
+        "mode": 1,
+        "date": "2025-08-09",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "The microcosm reflects the macrocosm; balance within, balance without",
+            "action": "Invoke the power of transformation",
+            "astronomical": "Full Moon in Scorpio"
+        },
+        "created_at": "2025-08-09T03:28:11.107Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 65,
+    "fields": {
+        "mode": 1,
+        "date": "2025-08-10",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "In Alchemy, the concept of 'solve et coagula' represents the cyclical process of dissolution and reintegration, akin to the mystical union of opposites.",
+            "action": "Invoke the lunar cycle, channeling the waxing and waning energies to amplify your intentions.",
+            "astronomical": "The Andromeda Galaxy, a celestial neighbor, slowly colliding with our own, a cosmic dance of gravitational forces."
+        },
+        "created_at": "2025-08-09T03:28:12.070Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 66,
+    "fields": {
+        "mode": 2,
+        "date": "2025-08-08",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "The ancient Greek philosopher Heraclitus believed that 'no man ever steps in the same river twice, for it's not the same river and he's not the same man.'",
+            "action": "Take a moment to journal about your values and how they align with your current actions.",
+            "question": "What is the nature of your true self in a world of constant change?"
+        },
+        "created_at": "2025-08-09T03:28:12.447Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 67,
+    "fields": {
+        "mode": 2,
+        "date": "2025-08-09",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "The ancient Greek philosopher Epicurus believed that the key to happiness lies in the removal of physical pain and mental distress, not in the pursuit of wealth or power.",
+            "action": "Practice mindfulness in your daily activities to appreciate the beauty of the present moment.",
+            "question": "What is the true value of a life lived in the present?"
+        },
+        "created_at": "2025-08-09T03:28:12.864Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 68,
+    "fields": {
+        "mode": 2,
+        "date": "2025-08-10",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "The ancient Greek philosopher Epicurus believed that the key to happiness lies in living modestly, free from physical pain and mental distress.",
+            "action": "Practice mindfulness by letting go of past regrets and future anxieties.",
+            "question": "What is the true cost of living in the present moment?"
+        },
+        "created_at": "2025-08-09T03:28:13.399Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 69,
+    "fields": {
+        "mode": 3,
+        "date": "2025-08-08",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "The first recorded evidence of dental care comes from ancient China around 7000 BC, where people used twigs and brushes made from tree bark to clean their teeth.",
+            "action": "Drink at least eight glasses of water each day to aid in digestion and prevent dehydration.",
+            "question": "Are you consuming enough fiber-rich foods to support your digestive and overall health?"
+        },
+        "created_at": "2025-08-09T03:28:13.828Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 70,
+    "fields": {
+        "mode": 3,
+        "date": "2025-08-09",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "In 1964, the first birth control pill was approved by the US FDA.",
+            "action": "Practice 10-minute deep breathing exercises before bed to improve sleep quality.",
+            "question": "Are you prioritizing rest and recovery in your daily routine?"
+        },
+        "created_at": "2025-08-09T03:28:14.180Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 71,
+    "fields": {
+        "mode": 3,
+        "date": "2025-08-10",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "The first successful heart transplant was performed by Dr. Christiaan Barnard on December 3, 1967.",
+            "action": "Take a 5-minute break to stretch and practice deep breathing exercises whenever you feel overwhelmed.",
+            "question": "How often do you practice gratitude and self-care, especially during stressful situations?"
+        },
+        "created_at": "2025-08-09T03:28:14.637Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 72,
+    "fields": {
+        "mode": 4,
+        "date": "2025-08-08",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "In 1923, the Italian Futurist movement's founder, Filippo Tommaso Marinetti, wrote the first Futurist manifest: 'The Foundation and Manifesto of Futurism.' It celebrated the dynamism and violence of modern life, predicting a world of speed and technological advancement.",
+            "action": "Create a short story using only 50 words. The twist: the protagonist's name must be derived from a type of tree.",
+            "question": "Envision a world where architecture adapts to the needs of its inhabitants. Design a city that integrates seamlessly with nature."
+        },
+        "created_at": "2025-08-09T03:28:15.143Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 73,
+    "fields": {
+        "mode": 4,
+        "date": "2025-08-09",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "The first science fiction novel, 'New Atlantis', was published in 1627 by Francis Bacon.",
+            "action": "Write a 5-line poem using only words that start with the last letter of the previous word.",
+            "question": "Create a world where time is currency, and people trade years of their lives for material possessions."
+        },
+        "created_at": "2025-08-09T03:28:15.509Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 74,
+    "fields": {
+        "mode": 4,
+        "date": "2025-08-10",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "In 1923, the Bauhaus school in Germany, founded by Walter Gropius, revolutionized art education by merging fine arts and crafts with industrial design, paving the way for modernist architecture and design.",
+            "action": "Create a 5-minute mixed-media collage using recycled materials, incorporating textures and patterns to evoke a sense of nostalgia and futurism.",
+            "question": "Design a futuristic cityscape from the perspective of a time-traveling photographer."
+        },
+        "created_at": "2025-08-09T03:28:15.974Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 75,
+    "fields": {
+        "mode": 5,
+        "date": "2025-08-08",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "In the 17th century, the inventor of the first mechanical pencil, Nicolas-Jacques Conté, used a wooden case with graphite powder to create a primitive pencil, which became an essential writing tool for artists and writers.",
+            "action": "Use the '2-minute rule' to prioritize tasks by asking yourself if they can be done in less than 2 minutes. If yes, do them immediately.",
+            "question": "How can you boost your morning routine to set yourself up for success?"
+        },
+        "created_at": "2025-08-09T03:28:16.619Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 76,
+    "fields": {
+        "mode": 5,
+        "date": "2025-08-09",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "Before the advent of the paperclip in the late 1800s, office workers used pins, staples, and even brooches to keep their papers together.",
+            "action": "Use the '2-minute rule' to determine if a task is worth scheduling: if it can be done in less than 2 minutes, do it immediately.",
+            "question": "Can using a planner help you stay on top of your tasks?"
+        },
+        "created_at": "2025-08-09T03:28:17.173Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 77,
+    "fields": {
+        "mode": 5,
+        "date": "2025-08-10",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "Benjamin Franklin used a 'to-do' list, known as his 'task list,' to keep track of his daily tasks and appointments in the 18th century.",
+            "action": "Use the Eisenhower Matrix to categorize tasks into urgent vs. important and focus on the most critical ones first.",
+            "question": "How can you prioritize tasks effectively in a busy workday?"
+        },
+        "created_at": "2025-08-09T03:28:17.548Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 78,
+    "fields": {
+        "mode": 6,
+        "date": "2025-08-08",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "In 2015, scientists at the National Ignition Facility achieved a record-breaking 500 trillion degrees Celsius using laser-induced fusion, briefly sustaining a plasma state.",
+            "action": "Explore the ITER project and its plans for achieving commercial-scale fusion power by 2050.",
+            "question": "What is the current status of nuclear fusion technology and its potential to replace fossil fuels?"
+        },
+        "created_at": "2025-08-09T03:28:18.012Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 79,
+    "fields": {
+        "mode": 6,
+        "date": "2025-08-09",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "The first human spaceflight was achieved by Soviet cosmonaut Yuri Gagarin on April 12, 1961, in the Vostok 1 spacecraft, marking a historic milestone in space exploration.",
+            "action": "Watch a documentary about SpaceX's Starship program",
+            "question": "What is the current state of space exploration, especially with regard to private companies?"
+        },
+        "created_at": "2025-08-09T03:28:18.407Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 80,
+    "fields": {
+        "mode": 6,
+        "date": "2025-08-10",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "The 2024 United States presidential election was the first to include comprehensive election security measures implemented in 2023.",
+            "action": "Explore how recent U.S. elections influence international relations and global governance.",
+            "question": "What role did the 2024 United States presidential election play in shaping current global politics?"
+        },
+        "created_at": "2025-08-09T03:28:18.909Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 81,
+    "fields": {
+        "mode": 7,
+        "date": "2025-08-08",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "Leonardo da Vinci's designs for flying machines in the 15th century laid the groundwork for modern aerodynamics and innovation.",
+            "action": "Develop a prototype that utilizes AI-powered climate modeling to predict and mitigate the impact of extreme weather events.",
+            "question": "What if combining human intuition and AI-driven insights could propel us toward a more sustainable future?"
+        },
+        "created_at": "2025-08-09T03:28:19.331Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 82,
+    "fields": {
+        "mode": 7,
+        "date": "2025-08-09",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "Leonardo da Vinci's designs for flying machines in the 15th century laid the groundwork for modern aerodynamics and aviation innovation.",
+            "action": "Develop a 6-month plan to implement AI-powered automation in a current project.",
+            "question": "How will advancements in AI influence the role of humans in the workforce by 2030?"
+        },
+        "created_at": "2025-08-09T03:28:19.705Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 83,
+    "fields": {
+        "mode": 7,
+        "date": "2025-08-10",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "Nikola Tesla's work on alternating current (AC) revolutionized the way electricity is transmitted and paved the way for the widespread adoption of electricity in the early 20th century.",
+            "action": "Develop a minimum viable product for an AI-powered creative writing tool within the next 6 months.",
+            "question": "How can we integrate AI-assisted design into our daily lives to enhance creativity and innovation by 2030?"
+        },
+        "created_at": "2025-08-09T03:28:20.093Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 84,
+    "fields": {
+        "mode": 8,
+        "date": "2025-08-08",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "In ancient Japan, the 'Kintsugi' art form celebrates the beauty of imperfections, highlighting the value of embracing life's fragilities rather than hiding them.",
+            "action": "Practice a 'body scan' meditation, gently releasing tension in each muscle group as you inhale and exhale deeply.",
+            "question": "What is the true nature of your inner peace amidst life's chaos?"
+        },
+        "created_at": "2025-08-09T03:28:20.942Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 85,
+    "fields": {
+        "mode": 8,
+        "date": "2025-08-09",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "In ancient Japan, the art of Shinrin-yoku, or forest bathing, was a spiritual practice to connect with nature's healing energy.",
+            "action": "Take 5 minutes to write down your intentions, then let them go, trusting the universe will guide you.",
+            "question": "As you reflect on the present, what seeds of intention will you sow for the future?"
+        },
+        "created_at": "2025-08-09T03:28:21.335Z"
+    }
+},
+{
+    "model": "journal.dailycontent",
+    "pk": 86,
+    "fields": {
+        "mode": 8,
+        "date": "2025-08-10",
+        "content_type": "global",
+        "personalization_key": null,
+        "content_data": {
+            "fact": "The ancient Greek philosopher, Plato, believed in the concept of 'anamnesis' or the idea that the soul remembers events from past lives",
+            "action": "Practice a 5-minute morning meditation focusing on gratitude",
+            "question": "What aspects of your being are you cultivating this week?"
+        },
+        "created_at": "2025-08-09T03:28:21.681Z"
+    }
+},
+{
+    "model": "userprofile.userprofile",
+    "pk": 1,
+    "fields": {
+        "user": [
+            "admin"
+        ],
+        "preferred_mode": "2",
+        "created_at": "2025-07-16T01:54:41.715Z",
+        "timezone": "UTC",
+        "selected_mode": null
+    }
+},
+{
+    "model": "userprofile.userprofile",
+    "pk": 2,
+    "fields": {
+        "user": [
+            "s2"
+        ],
+        "preferred_mode": "1",
+        "created_at": "2025-07-16T02:09:16.164Z",
+        "timezone": "UTC",
+        "selected_mode": null
+    }
+},
+{
+    "model": "userprofile.userprofile",
+    "pk": 3,
+    "fields": {
+        "user": [
+            "s4"
+        ],
+        "preferred_mode": "1",
+        "created_at": "2025-07-16T04:06:46.513Z",
+        "timezone": "UTC",
+        "selected_mode": null
+    }
+},
+{
+    "model": "userprofile.userprofile",
+    "pk": 4,
+    "fields": {
+        "user": [
+            "s1"
+        ],
+        "preferred_mode": "1",
+        "created_at": "2025-07-16T04:08:48.412Z",
+        "timezone": "UTC",
+        "selected_mode": null
+    }
+},
+{
+    "model": "userprofile.userprofile",
+    "pk": 5,
+    "fields": {
+        "user": [
+            "s6"
+        ],
+        "preferred_mode": "1",
+        "created_at": "2025-07-17T02:02:09.923Z",
+        "timezone": "UTC",
+        "selected_mode": null
+    }
+},
+{
+    "model": "userprofile.userprofile",
+    "pk": 6,
+    "fields": {
+        "user": [
+            "s5"
+        ],
+        "preferred_mode": "2",
+        "created_at": "2025-07-19T05:06:33.378Z",
+        "timezone": "Singapore",
+        "selected_mode": null
+    }
+},
+{
+    "model": "user_management.userplan",
+    "pk": 1,
+    "fields": {
+        "user": [
+            "s6"
+        ],
+        "plan": "free",
+        "preferred_mode": "default",
+        "created_at": "2025-07-17T02:02:09.924Z"
+    }
+},
+{
+    "model": "user_management.userplan",
+    "pk": 2,
+    "fields": {
+        "user": [
+            "s5"
+        ],
+        "plan": "free",
+        "preferred_mode": "default",
+        "created_at": "2025-07-19T05:06:33.381Z"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 1,
+    "fields": {
+        "action_time": "2025-07-16T02:00:49.189Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "auth",
+            "user"
+        ],
+        "object_id": "2",
+        "object_repr": "s1",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 2,
+    "fields": {
+        "action_time": "2025-07-16T02:09:16.165Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "auth",
+            "user"
+        ],
+        "object_id": "3",
+        "object_repr": "s2",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 3,
+    "fields": {
+        "action_time": "2025-07-16T02:30:22.318Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "auth",
+            "user"
+        ],
+        "object_id": "1",
+        "object_repr": "admin",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"First name\", \"Last name\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 4,
+    "fields": {
+        "action_time": "2025-07-16T04:06:01.920Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "auth",
+            "user"
+        ],
+        "object_id": "4",
+        "object_repr": "s3",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 5,
+    "fields": {
+        "action_time": "2025-07-16T04:06:46.513Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "auth",
+            "user"
+        ],
+        "object_id": "5",
+        "object_repr": "s4",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 6,
+    "fields": {
+        "action_time": "2025-07-16T04:07:09.729Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "auth",
+            "user"
+        ],
+        "object_id": "2",
+        "object_repr": "s1",
+        "action_flag": 2,
+        "change_message": "[]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 7,
+    "fields": {
+        "action_time": "2025-07-16T04:08:48.412Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "userprofile",
+            "userprofile"
+        ],
+        "object_id": "4",
+        "object_repr": "s1",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 8,
+    "fields": {
+        "action_time": "2025-07-16T07:53:52.610Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "journal",
+            "journalentry"
+        ],
+        "object_id": "13",
+        "object_repr": "admin - 2025-07-15",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 9,
+    "fields": {
+        "action_time": "2025-07-16T07:53:57.570Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "journal",
+            "journalentry"
+        ],
+        "object_id": "12",
+        "object_repr": "admin - 2025-07-16",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 10,
+    "fields": {
+        "action_time": "2025-07-17T02:02:09.927Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "auth",
+            "user"
+        ],
+        "object_id": "6",
+        "object_repr": "s6",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 11,
+    "fields": {
+        "action_time": "2025-07-17T02:06:54.373Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "auth",
+            "user"
+        ],
+        "object_id": "2",
+        "object_repr": "s1",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Staff status\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 12,
+    "fields": {
+        "action_time": "2025-07-17T02:07:03.029Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "auth",
+            "user"
+        ],
+        "object_id": "3",
+        "object_repr": "s2",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Staff status\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 13,
+    "fields": {
+        "action_time": "2025-07-17T02:49:06.592Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "auth",
+            "user"
+        ],
+        "object_id": "2",
+        "object_repr": "s1",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"User permissions\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 14,
+    "fields": {
+        "action_time": "2025-07-19T07:37:53.374Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "userprofile",
+            "userprofile"
+        ],
+        "object_id": "6",
+        "object_repr": "s5",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Timezone\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 15,
+    "fields": {
+        "action_time": "2025-07-25T01:15:41.948Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "journal",
+            "journalentry"
+        ],
+        "object_id": "67",
+        "object_repr": "admin - 2025-07-25 01:12:13.676627+00:00",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 16,
+    "fields": {
+        "action_time": "2025-07-25T01:16:25.877Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "journal",
+            "journalentry"
+        ],
+        "object_id": "66",
+        "object_repr": "admin - 2025-07-25 01:11:57.927018+00:00",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 17,
+    "fields": {
+        "action_time": "2025-07-26T06:36:57.473Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "userprofile",
+            "userprofile"
+        ],
+        "object_id": "6",
+        "object_repr": "s5",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Preferred mode\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 18,
+    "fields": {
+        "action_time": "2025-07-30T03:30:53.766Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "journal",
+            "journalentry"
+        ],
+        "object_id": "77",
+        "object_repr": "admin - 2025-07-30 03:26:35.564176+00:00",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 19,
+    "fields": {
+        "action_time": "2025-07-30T03:31:34.772Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "journal",
+            "journalentry"
+        ],
+        "object_id": "78",
+        "object_repr": "admin - 2025-07-30 03:30:59.829834+00:00",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 20,
+    "fields": {
+        "action_time": "2025-07-30T03:34:01.976Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "journal",
+            "journalentry"
+        ],
+        "object_id": "76",
+        "object_repr": "admin - 2025-07-30 03:25:45.509002+00:00",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 21,
+    "fields": {
+        "action_time": "2025-07-30T03:40:17.868Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "journal",
+            "journalentry"
+        ],
+        "object_id": "80",
+        "object_repr": "admin - 2025-07-30 03:34:05.117851+00:00",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 22,
+    "fields": {
+        "action_time": "2025-07-30T03:42:40.450Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "journal",
+            "journalentry"
+        ],
+        "object_id": "81",
+        "object_repr": "admin - 2025-07-30 03:40:22.675745+00:00",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 23,
+    "fields": {
+        "action_time": "2025-08-02T01:59:21.836Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "journal",
+            "dailycontent"
+        ],
+        "object_id": "1",
+        "object_repr": "Mystical - 2025-08-02 (global)",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Date\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 24,
+    "fields": {
+        "action_time": "2025-08-02T02:14:43.150Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "journal",
+            "dailycontent"
+        ],
+        "object_id": "1",
+        "object_repr": "Mystical - 2025-08-02 (global)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 25,
+    "fields": {
+        "action_time": "2025-08-02T02:21:28.654Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "journal",
+            "dailycontent"
+        ],
+        "object_id": "4",
+        "object_repr": "Mystical - 2025-08-03 (global)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 26,
+    "fields": {
+        "action_time": "2025-08-02T02:24:05.561Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "journal",
+            "dailycontent"
+        ],
+        "object_id": "26",
+        "object_repr": "Mystical - 2025-08-03 (global)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 27,
+    "fields": {
+        "action_time": "2025-08-02T02:24:09.933Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "journal",
+            "dailycontent"
+        ],
+        "object_id": "2",
+        "object_repr": "Mystical - 2025-08-01 (global)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 28,
+    "fields": {
+        "action_time": "2025-08-02T02:28:21.967Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "journal",
+            "dailycontent"
+        ],
+        "object_id": "3",
+        "object_repr": "Mystical - 2025-08-02 (global)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 29,
+    "fields": {
+        "action_time": "2025-08-02T02:29:20.432Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "journal",
+            "dailycontent"
+        ],
+        "object_id": "28",
+        "object_repr": "Mystical - 2025-08-02 (global)",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Date\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 30,
+    "fields": {
+        "action_time": "2025-08-02T02:29:39.035Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "journal",
+            "dailycontent"
+        ],
+        "object_id": "29",
+        "object_repr": "Mystical - 2025-08-03 (global)",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Date\"]}}]"
+    }
+}
+]

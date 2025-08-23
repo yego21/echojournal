@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div id = "journal-body">
 <div id="journal_container" class="rounded-2xl">
 <div class="min-h-screen">
   
@@ -30,8 +31,9 @@
         hx-post="{% url 'journal:switch_mode_dynamic' %}" 
         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
         hx-trigger="change"
-        hx-target="body"
+        hx-target="#journal-body"
         hx-swap="none"
+        
       >
         <option disabled {% if not active_mode %}selected{% endif %}>Choose a mode...</option>
         
@@ -46,6 +48,11 @@
 </div>
 </div>
 
+<!-- Where modals will be injected -->
+<div id="modal-root"></div>
+
+<!-- Where search results will render -->
+<div id="search-results" class="mt-6 space-y-3"></div>
 
   <!-- Main Content Grid -->
 <div class="main-content">
@@ -143,7 +150,11 @@
             </button>
             
             <!-- Search -->
-            <button class="flex flex-col items-center p-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-colors group">
+            <button class="flex flex-col items-center p-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-colors group
+             w-full rounded-2xl bg-white p-4 shadow hover:shadow-md text-left"
+            hx-get="{% url 'journal:search_modal' %}"
+            hx-target="#modal-root"
+            hx-swap="innerHTML">
               <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
               </svg>
@@ -206,7 +217,7 @@
   </div>
   </div>
   
-  <!-- Hidden container for loading AI insights -->
+  <!-- Hidden container for loading AI ai_insights -->
   <div id="insight-panel" style="display: none;"></div>
 
 </div>
@@ -431,4 +442,5 @@ document.addEventListener('DOMContentLoaded', function() {
           target: '#entry-filter-wrapper',
           swap: 'innerHTML'
       }); -->
+      </div>
 {% endblock %}

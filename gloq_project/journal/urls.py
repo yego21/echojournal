@@ -9,7 +9,10 @@ urlpatterns = [
     path('entries/', views.same_day_entries, name='same_day_entries'),
     path('entries/new/', views.submit_journal_entry, name='new_journal_entry'),
     path('synthesize/', views.synthesize_entries, name='synthesize_entries'),
-    path('fetch-entries/', views.filter_entries_by_date, name='filter_entries_by_date'),
+    # path('fetch-entries/', views.fetch_entries_by_range, name='fetch_entries_by_range'),
+
+
+
     path('modes/', views.mode_explorer, name='mode_explorer'),
     path('_mode_banner/', views._mode_banner, name='_mode_banner'),
     path("_synth_button/", views._synth_button, name="_synth_button"),
@@ -22,5 +25,12 @@ urlpatterns = [
     path('switch-mode-dynamic/', views.switch_mode_dynamic, name='switch_mode_dynamic'),
     path('insight-panel/', views.load_insight_panel, name='load_insight_panel'),
     path('insight-tab/<str:tab_name>/', views.load_insight_tab, name='load_insight_tab'),
+
+
+    path("search/modal/", views.search_modal, name="search_modal"),
+    path("search/results/", views.search_results, name="search_results"),
+    path("search/results_by_tag/", views.filter_results_by_tag, name="filter_results_by_tag"),
+
+    path("entry/<int:pk>/", views.entry_detail, name="entry_detail"),
 
 ]

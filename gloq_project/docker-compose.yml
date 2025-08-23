@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis_dev
+    ports:
+      - "6379:6379"      # expose port to host
+    volumes:
+      - redis_data_dev:/data   # persistent volume
+
+volumes:
+  redis_data_dev:

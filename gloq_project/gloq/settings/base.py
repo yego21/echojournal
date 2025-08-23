@@ -14,9 +14,23 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 load_dotenv()
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+env_name = os.environ.get("DJANGO_ENV", "dev")  # default to dev if not set
+print(f'djando env:{env_name}')
+
+
+
+
+
+
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -86,47 +100,11 @@ WSGI_APPLICATION = 'gloq.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',  # psycopg2 is the driver behind this
-        'NAME': 'Gloq',
-        'USER': 'postgres',
-        'PASSWORD': 'yeah',
-        'HOST': 'localhost',  # or your DB server IP
-        'PORT': '5432',       # PostgreSQL's default port
-    }
-}
+
 
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
-
-USE_REDIS = True  # change to False to disable Redis
-
-if USE_REDIS:
-    CACHES = {
-        "default": {
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": "redis://127.0.0.1:6379/1",  # Docker Redis port
-            "OPTIONS": {
-                "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            }
-        }
-    }
-
-    # Optional: use Redis for sessions
-    SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-    SESSION_CACHE_ALIAS = "default"
-else:
-    # Fallback: use local memory cache
-    CACHES = {
-        "default": {
-            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-        }
-    }
-
-    SESSION_ENGINE = "django.contrib.sessions.backends.db"  # fallback to DB sessions
-
 
 
 # Password validation
@@ -166,7 +144,7 @@ AUTH_PASSWORD_VALIDATORS = []
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Singapore'
+TIME_ZONE = 'Asia/Singapore'
 
 USE_I18N = True
 

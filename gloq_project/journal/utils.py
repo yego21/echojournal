@@ -14,14 +14,14 @@ from django.core.cache import cache
 def get_synthesis_prompt(mode_slug, synthesis_type):
     SYNTHESIS_PROMPTS = {
         "mystical": {
-            "reflect": "Interpret the journal entry through symbols, dreams, and archetypal meaning. Weave in gentle spiritual insights.",
+            "reflect": "Interpret the journal entry through symbols, dreams, and archetypal meaning. Weave in gentle spiritual ai_insights.",
             "digest": "Integrate today’s events into a spiritual lesson. Focus on personal growth and meaning.",
             "roast": "Playfully call out whimsical over-interpretations or magical thinking. Keep it lighthearted.",
             "suggest": "Recommend grounded, soulful next steps for clarity or alignment."
         },
         "philosophical": {
             "reflect": "Contemplate your experiences in light of life's bigger questions and timeless ideas.",
-            "digest": "Extract deep lessons or moral insights from today’s events in a thoughtful, reasoned tone.",
+            "digest": "Extract deep lessons or moral ai_insights from today’s events in a thoughtful, reasoned tone.",
             "roast": "Wittily point out contradictions, flawed reasoning, or philosophical overcomplication.",
             "suggest": "Offer a thought-provoking question or perspective for tomorrow’s reflection."
         },
