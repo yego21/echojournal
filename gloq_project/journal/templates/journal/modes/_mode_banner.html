@@ -1,9 +1,0 @@
-{% if selected_mode %}
-  <div class="p-2 mb-4 bg-blue-100 rounded text-sm text-blue-800">
-    Currently in: <strong>{{ selected_mode.name }}</strong><br>
-    <small class="text-muted">
-      🧠 Not sure which mode fits you best?
-      <a href="{% url 'journal:mode_explorer' %}" class="link-primary">Explore the modes</a>
-    </small>
-  </div>
-{% endif %}

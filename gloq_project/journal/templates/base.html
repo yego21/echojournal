@@ -6,33 +6,115 @@
   <title>{% block title %}Gloq{% endblock %}</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+  <style>
+        /* Custom animations and transitions */
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.9);
+        }
+    </style>
+ 
 </head>
 <!-- Header -->
-<header class="bg-[#110f08] border-b border-gray-200">
-  <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-    <div class="text-xl font-semibold text-gray-800">
-      <a href="/">🌀 Gloq</a>
-    </div>
-    
-     <!-- Right-side container: Timezone + Nav -->
-  <div class="flex items-center space-x-4">
-    <!-- Timezone: Always visible -->
-    <div class="text-sm text-gray-500">
-      Your Timezone: {{ user_timezone }}
-    </div>
+ <!-- Header Section with improved visual hierarchy -->
+<!-- Option 1: Right side, before user section (Recommended) -->
+<header class="glass-effect border-b border-white/20 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+        <div class="flex justify-between items-center">
+            
+            <!-- Logo Section -->
+            <a href="/" class="flex items-center space-x-4 hover:opacity-80 transition-opacity">
+                <div class="relative">
+                    <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                        <span class="text-white font-bold text-xl">🌀</span>
+                    </div>
+                    <div class="absolute inset-0 w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-2xl blur opacity-30 -z-10"></div>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Gloq</h1>
+                    <p class="text-sm text-gray-600 font-medium">Simple notes, Subtle power</p>
+                </div>
+            </a>
 
-    <!-- Desktop Nav -->
-    <nav class="hidden md:flex items-center space-x-4">
-      {% if user.is_authenticated %}
-        <span class="text-gray-700">Hello, {{ user.username }}</span>        
-        <a href="{% url 'logout' %}" class="text-red-600 hover:underline">Logout</a>
-      {% else %}
-        <a href="{% url 'login' %}" class="text-indigo-600 hover:underline">Login</a>
-        <a href="{% url 'signup' %}" class="text-indigo-600 hover:underline">Sign Up</a>
-      {% endif %}
-    </nav>
+            <!-- Right Section: Mode Selector + User Nav -->
+            <div class="flex items-center space-x-6">
+                <!-- Mode Selector -->
+                <div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200/50 p-1">
+                    <select id="mode-select" name="mode_slug" class="bg-transparent border-0 rounded-lg px-4 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none cursor-pointer min-w-40"
+                    hx-post="{% url 'journal:switch_mode_dynamic' %}" 
+                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                    hx-trigger="change"
+                    hx-target="#journal-body"
+                    hx-swap="none"
+                    
+                  >
+                        <option disabled {% if not active_mode %}selected{% endif %}>Choose mode...</option>
+                        {% for m in modes %}
+                            <option value="{{ m.slug }}" {% if active_mode == m.slug %}selected{% endif %}>{{ m.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-    <!-- Hamburger (mobile only) -->
+                <!-- Rest of user nav... -->
+                <div class="hidden lg:flex items-center space-x-2 text-sm text-gray-500">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12,6 12,12 16,14"></polyline>
+                    </svg>
+                    <span>{{ user_timezone }}</span>
+                </div>
+                 <nav class="hidden md:flex items-center space-x-4">
+                    {% if user.is_authenticated %}
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-8 h-8 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center">
+                                    <span class="text-white text-sm font-medium">{{ user.username|first|upper }}</span>
+                                </div>
+                                <span class="text-gray-700 font-medium">{{ user.username }}</span>
+                            </div>
+                           <a href="{% url 'logout' %}" 
+   class="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors group"
+   title="Logout">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+    </svg>
+</a>
+                        </div>
+                    {% else %}
+                        <div class="flex items-center space-x-2">
+                            <a href="{% url 'login' %}" class="px-4 py-2 text-sm text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
+                                Login
+                            </a>
+                            <a href="{% url 'signup' %}" class="px-4 py-2 text-sm bg-indigo-600 text-white hover:bg-indigo-700 rounded-lg transition-colors">
+                                Sign Up
+                            </a>
+                        </div>
+                    {% endif %}
+                </nav>
+
+                 <!-- Hamburger (mobile only) -->
      <div class="md:hidden relative"></div>
     <button id="navToggle" class="md:hidden text-gray-600 focus:outline-none">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
@@ -55,17 +137,19 @@
     {% endif %}
   </div>
 </nav>
-
-  </div>
+            </div>
+        </div>
+    </div>
 </header>
-<body class="bg-gradient-to-br from-gray-900 to-green-900 min-h-screen py-1">
+
+<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-screen">
 <!-- Main Dashboard Layout -->
-<main class="max-w-6xl mx-auto px-4 py-4 ">
+
   {% block content %}
   <!-- Dashboard Grid -->
  
   {% endblock %}
-</main>
+
 
 </body>
 

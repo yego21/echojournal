@@ -4,7 +4,7 @@ import json
 import pytz
 
 from .models import JournalMode
-from .mode_styler import MODE_STYLER_CONFIG
+from .mode_styler import MODE_STYLER_CONFIG, MODE_HEADER_CONFIG
 from groq import Groq
 import random
 from datetime import datetime
@@ -127,6 +127,20 @@ def get_mode_styler_context(current_mode):
     if current_mode in MODE_STYLER_CONFIG:
         return MODE_STYLER_CONFIG[current_mode]
     return MODE_STYLER_CONFIG['default']
+
+
+def get_header_config(mode):
+    """Get header configuration for the specified mode"""
+    return MODE_HEADER_CONFIG.get(mode, {
+        "icon": "📝",
+        "icon_bg": "bg-gradient-to-br from-gray-500 to-gray-600",
+        "title": "Journal Mode",
+        "description": "Select a mode to unlock specialized features",
+        "svg": """
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        """
+    })
 
 
 

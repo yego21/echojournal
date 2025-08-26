@@ -1,227 +1,304 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div id = "journal-body">
-<div id="journal_container" class="rounded-2xl">
-<div class="min-h-screen">
-  
- <!-- Header with Logo/Slogan and Mode Selector -->
-  <div class="mode-header bg-purple-50 rounded-2xl">
-  
-<div class="max-w-6xl mx-auto px-4 py-6">
-  <div class="flex justify-between items-center">
-    
-    <!-- Logo and Slogan (Left Side) -->
-    <div class="flex items-center space-x-4">
-      <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center">
-        <span class="text-white font-bold text-lg">🌀</span>
-      </div>
-      <div>
-        <h1 class="text-2xl font-bold text-gray-900">Gloq</h1>
-        <p class="text-sm text-gray-600">Simple notes, Subtle power</p>
-      </div>
-    </div>
+<div id="journal-body">
+<div id="journal_container" class="rounded-2xl bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-screen transition-all duration-300">
 
-    <!-- Mode Selector (Right Side) -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-1">
-      <select 
-        id="mode-select"
-        name="mode_slug"
-        class="bg-transparent border-0 rounded-lg px-4 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-        hx-post="{% url 'journal:switch_mode_dynamic' %}" 
-        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-        hx-trigger="change"
-        hx-target="#journal-body"
-        hx-swap="none"
-        
-      >
-        <option disabled {% if not active_mode %}selected{% endif %}>Choose a mode...</option>
-        
-        {% for m in modes %}
-          <option value="{{ m.slug }}" {% if active_mode == m.slug %}selected{% endif %}>
-            {{ m.name }}
-          </option>
-        {% endfor %}
-      </select>
-    </div>
-  </div>
-</div>
-</div>
+<style>
+/* Custom animations and transitions */
+.card-hover {
+    transition: all 0.3s ease;
+}
+.card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
 
-<!-- Where modals will be injected -->
-<div id="modal-root"></div>
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
 
-<!-- Where search results will render -->
-<div id="search-results" class="mt-6 space-y-3"></div>
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
-  <!-- Main Content Grid -->
-<div class="main-content">
-  <div class="max-w-6xl mx-auto px-4 pb-8">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      
-      <!-- Left Column: Journal Entry & Recent Entries -->
-      <div class="lg:col-span-2 space-y-6">
+.gradient-bg {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
 
-        <!-- New Entry Card -->
-         <hr>
-       <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div class="p-6 border-b border-gray-200">
-            <div class="flex items-center justify-between">
-              <h2 class="text-lg font-medium text-gray-900">New Entry</h2>
-              <button id="toggle-entry" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-full transition-colors">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                </svg>
-              </button>
+.glass-effect {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.9);
+}
+</style>
+
+   
+
+    <!-- Where modals will be injected -->
+    <div id="modal-root"></div>
+
+    <!-- Where search results will render -->
+    <div id="search-results" class="mt-6 space-y-3"></div>
+
+    <!-- Main Dashboard Container -->
+    <div class="max-w-7xl mx-auto px-6 py-8 main-content">
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+            
+            <!-- Left Column - Main Content (2/3 width) -->
+            <div class="xl:col-span-2 space-y-8">
+
+                <!-- New Entry Card - Major visual upgrade with Django functionality -->
+                <div class="card-hover bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 overflow-hidden fade-in">
+                    <div class="p-8">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center shadow-md">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h2 class="text-xl font-bold text-gray-900">New Entry</h2>
+                                    <p class="text-sm text-gray-600">Capture your thoughts and ideas</p>
+                                </div>
+                            </div>
+                            
+                            <button id="toggle-entry" class="group relative overflow-hidden bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white px-6 py-3 rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-5 h-5 transition-transform group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                    </svg>
+                                    <span class="font-semibold">Create Entry</span>
+                                </div>
+                            </button>
+                        </div>
+
+                        <!-- Entry Form Container - Hidden by default -->
+                        <div id="entry-form-container" class="hidden">
+                            {% include "journal/journal_form.html" %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Alerts Container -->
+                <div id="form-alerts"></div>
+
+                <!-- Mode Features Card - Enhanced visual hierarchy with Django functionality -->
+                <div class="card-hover {{ mode_styler.feature_card_class|default:'bg-white/80 backdrop-blur-sm' }} rounded-3xl shadow-xl border border-white/20 overflow-hidden fade-in">
+    <!-- Header Section -->
+    <div class="px-8 pt-6 pb-4 border-b border-gray-100/50">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+               
+                <h3 class="text-xl font-semibold text-gray-900" id="content-title">Mode Features</h3>
             </div>
-          </div>
-          
-          <div id="entry-form-container" class="p-6 hidden">
-            {% include "journal/journal_form.html" %}
-          </div>
+            
+            <!-- Optional: Status indicator -->
+            <div class="flex items-center space-x-2">
+                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Active</span>
+            </div>
         </div>
-<div id="form-alerts"></div>
-        <!-- Mode Features / AI Insights Container -->
-        <div class="{{ mode_styler.feature_card_class|default:'bg-white shadow-sm border border-gray-200' }} rounded-lg p-6">
-          <div class="p-6 border-b border-gray-200">
-            <h3 class="text-lg font-medium text-gray-900" id="content-title">Mode Features</h3>
-          </div>
-          
-          <div id="dynamic-content" class="p-6">
+    </div>
+
+    <!-- Content Section -->
+    <div class="p-8">
+        <!-- Dynamic Content Container -->
+        <div id="dynamic-content" class="space-y-4">
             <!-- Mode-specific content will load here -->
             <div id="mode-features">
-              
+                <!-- Initial mode features will be loaded via JavaScript -->
             </div>
-          </div>
         </div>
-
-      </div>
-
-      <!-- Right Column: AI Insights & Quick Stats -->
-      <div class="space-y-6">
-
-        <!-- AI Insights -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mt-4">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-              </svg>
-            </div>
-            <h3 class="text-lg font-medium text-gray-900">AI Insights</h3>
-          </div>
-          
-          <p class="text-gray-600 text-sm mb-4">Discover patterns and insights from your journal entries</p>
-          
-          <button id="insight_button"
-            onclick="toggleAIInsights()"
-            class="w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium">
-            Open Insights
-          </button>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
-          
-          <div class="grid grid-cols-3 gap-3">
-           <!-- Mode Explorer -->
-    <a href="{% url 'journal:mode_explorer' %}" class="flex flex-col items-center p-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-colors group">
-        <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01"/>
-        </svg>
-        <span class="text-xs">Modes</span>
-    </a>
-            
-            <!-- Tags -->
-            <button class="flex flex-col items-center p-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-colors group">
-              <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5l7 7-7 7-7-7V3z"/>
-              </svg>
-              <span class="text-xs">Tags</span>
-            </button>
-            
-            <!-- Analytics -->
-            <button class="flex flex-col items-center p-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-colors group">
-              <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-              </svg>
-              <span class="text-xs">Stats</span>
-            </button>
-            
-            <!-- Search -->
-            <button class="flex flex-col items-center p-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-colors group
-             w-full rounded-2xl bg-white p-4 shadow hover:shadow-md text-left"
-            hx-get="{% url 'journal:search_modal' %}"
-            hx-target="#modal-root"
-            hx-swap="innerHTML">
-              <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-              </svg>
-              <span class="text-xs">Search</span>
-            </button>
-            
-            <!-- Export -->
-            <button class="flex flex-col items-center p-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-colors group">
-              <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-              </svg>
-              <span class="text-xs">Export</span>
-            </button>
-            
-            <!-- Settings -->
-            <button class="flex flex-col items-center p-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-colors group">
-              <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-              </svg>
-              <span class="text-xs">Settings</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Daily Quote -->
-        <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg border border-indigo-100 p-6">
-          <div class="flex items-start gap-3">
-            <svg class="w-6 h-6 text-indigo-400 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z"/>
-            </svg>
-            <div>
-              <p class="text-gray-700 italic mb-2">"The way to get started is to quit talking and begin doing."</p>
-              <p class="text-sm text-gray-500">— Walt Disney</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Quick Stats -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">This Week</h3>
-          <div class="space-y-3">
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Entries</span>
-              <span class="font-medium text-gray-900">{{ entries_count|default:0 }}</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Current Streak</span>
-              <span class="font-medium text-green-600">{{ streak_days|default:0 }} days</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Total Words</span>
-              <span class="font-medium text-gray-900">{{ word_count|default:0 }}</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
     </div>
-  </div>
-  </div>
-  
-  <!-- Hidden container for loading AI ai_insights -->
-  <div id="insight-panel" style="display: none;"></div>
+</div>
+
+            </div>
+
+            <!-- Right Column - Sidebar -->
+            <div class="space-y-8">
+
+                <!-- AI Insights Card - Enhanced with Django functionality -->
+                <div class="card-hover bg-gradient-to-br from-indigo-50 via-purple-50 to-blue-50 rounded-3xl shadow-xl border border-indigo-200/50 overflow-hidden fade-in">
+                    <div class="p-8">
+                        <div class="flex items-center space-x-4 mb-6">
+                            <div class="relative">
+                                <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    </svg>
+                                </div>
+                                <!-- Animated pulse effect -->
+                                <div class="absolute inset-0 w-12 h-12 bg-indigo-400 rounded-2xl animate-ping opacity-20"></div>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-900">AI Insights</h3>
+                                <p class="text-sm text-gray-600">Discover patterns in your entries</p>
+                            </div>
+                        </div>
+                        
+                        <button id="insight_button"
+                            onclick="toggleAIInsights()"
+                            class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white py-4 px-6 rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 font-semibold">
+                            Open Insights
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Actions - Major visual upgrade with Django functionality -->
+                <div class="card-hover bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 overflow-hidden fade-in">
+                    <div class="p-8">
+                        <div class="flex items-center space-x-3 mb-6">
+                            <div class="w-10 h-10 bg-gradient-to-br from-gray-400 to-gray-600 rounded-xl flex items-center justify-center shadow-md">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900">Quick Actions</h3>
+                        </div>
+                        
+                        <div class="grid grid-cols-3 gap-4">
+                            <!-- Mode Explorer with Django URL -->
+                            <a href="{% url 'journal:mode_explorer' %}" class="group bg-gradient-to-br from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 p-4 rounded-2xl border border-blue-200/50 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center">
+                                <div class="flex flex-col items-center space-y-2">
+                                    <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-lg flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-200">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01"/>
+                                        </svg>
+                                    </div>
+                                    <span class="text-xs font-semibold text-gray-700 group-hover:text-gray-900">Modes</span>
+                                </div>
+                            </a>
+
+                            <!-- Tags -->
+                            <button class="group bg-gradient-to-br from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 p-4 rounded-2xl border border-green-200/50 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                <div class="flex flex-col items-center space-y-2">
+                                    <div class="w-8 h-8 bg-gradient-to-br from-green-400 to-emerald-500 rounded-lg flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-200">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5l7 7-7 7-7-7V3z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="text-xs font-semibold text-gray-700 group-hover:text-gray-900">Tags</span>
+                                </div>
+                            </button>
+
+                            <!-- Analytics -->
+                            <button class="group bg-gradient-to-br from-purple-50 to-pink-50 hover:from-purple-100 hover:to-pink-100 p-4 rounded-2xl border border-purple-200/50 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                <div class="flex flex-col items-center space-y-2">
+                                    <div class="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-500 rounded-lg flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-200">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="text-xs font-semibold text-gray-700 group-hover:text-gray-900">Stats</span>
+                                </div>
+                            </button>
+
+                            <!-- Search with Django HTMX -->
+                            <button class="group bg-gradient-to-br from-amber-50 to-orange-50 hover:from-amber-100 hover:to-orange-100 p-4 rounded-2xl border border-amber-200/50 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                                hx-get="{% url 'journal:search_modal' %}"
+                                hx-target="#modal-root"
+                                hx-swap="innerHTML">
+                                <div class="flex flex-col items-center space-y-2">
+                                    <div class="w-8 h-8 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-200">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="text-xs font-semibold text-gray-700 group-hover:text-gray-900">Search</span>
+                                </div>
+                            </button>
+
+                            <!-- Export -->
+                            <button class="group bg-gradient-to-br from-cyan-50 to-teal-50 hover:from-cyan-100 hover:to-teal-100 p-4 rounded-2xl border border-cyan-200/50 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                                <div class="flex flex-col items-center space-y-2">
+                                    <div class="w-8 h-8 bg-gradient-to-br from-cyan-400 to-teal-500 rounded-lg flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-200">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="text-xs font-semibold text-gray-700 group-hover:text-gray-900">Export</span>
+                                </div>
+                            </button>
+
+                            <!-- Settings -->
+                            <button class="group bg-gradient-to-br from-gray-50 to-slate-50 hover:from-gray-100 hover:to-slate-100 p-4 rounded-2xl border border-gray-200/50 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                                <div class="flex flex-col items-center space-y-2">
+                                    <div class="w-8 h-8 bg-gradient-to-br from-gray-400 to-slate-500 rounded-lg flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-200">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="text-xs font-semibold text-gray-700 group-hover:text-gray-900">Settings</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Daily Quote - Enhanced -->
+                <div class="card-hover bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 rounded-3xl shadow-xl border border-indigo-200/50 overflow-hidden fade-in">
+                    <div class="p-8">
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0">
+                                <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-2xl flex items-center justify-center shadow-md">
+                                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-gray-800 italic mb-4 text-lg leading-relaxed">
+                                    "The way to get started is to quit talking and begin doing."
+                                </p>
+                                <p class="text-sm text-gray-600 font-semibold">— Walt Disney</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats - Enhanced with Django variables -->
+                <div class="card-hover bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 overflow-hidden fade-in">
+                    <div class="p-8">
+                        <div class="flex items-center space-x-3 mb-6">
+                            <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center shadow-md">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900">This Week</h3>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div class="flex justify-between items-center p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl border border-blue-200/50">
+                                <span class="text-gray-700 font-medium">Entries</span>
+                                <span class="font-bold text-2xl text-blue-600">{{ entries_count|default:0 }}</span>
+                            </div>
+                            <div class="flex justify-between items-center p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-200/50">
+                                <span class="text-gray-700 font-medium">Current Streak</span>
+                                <span class="font-bold text-2xl text-green-600">{{ streak_days|default:0 }} days</span>
+                            </div>
+                            <div class="flex justify-between items-center p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl border border-purple-200/50">
+                                <span class="text-gray-700 font-medium">Total Words</span>
+                                <span class="font-bold text-2xl text-purple-600">{{ word_count|default:0 }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Hidden container for loading AI insights -->
+    <div id="insight-panel" style="display: none;"></div>
 
 </div>
 </div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const toggleBtn = document.getElementById('toggle-entry');
@@ -254,7 +331,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Handle HTMX form submission responses
 // Handle HTMX form submission responses
 document.body.addEventListener('htmx:afterRequest', function(event) {
     console.log('HTMX afterRequest triggered', event.detail);
@@ -329,15 +405,13 @@ document.body.addEventListener('htmx:afterRequest', function(event) {
 });
 
 // Function to toggle AI Insights
-
 let showingInsights = false;
 let cachedModeFeaturesHTML = null;
 
 function toggleAIInsights() {
     const contentTitle = document.getElementById('content-title');
     const dynamicContent = document.getElementById('dynamic-content');  
-   
-  
+    const button = document.getElementById('insight_button');
 
     if (!cachedModeFeaturesHTML) {
         const modeFeatures = document.getElementById('mode-features');
@@ -351,9 +425,9 @@ function toggleAIInsights() {
     if (showingInsights) {
         // Restore cached Mode Features
         contentTitle.textContent = 'Mode Features';        
-        dynamicContent.innerHTML = cachedModeFeaturesHTML;
+        dynamicContent.innerHTML = '<div id="mode-features">' + cachedModeFeaturesHTML + '</div>';
         showingInsights = false;
-        event.target.textContent = "Open Insights";
+        button.textContent = "Open Insights";
         console.log("Switched back to Mode Features");
     } else {
         // Load AI Insights (via HTMX)
@@ -363,17 +437,12 @@ function toggleAIInsights() {
             swap: 'innerHTML'
         });
         showingInsights = true;
-        event.target.textContent = "Close Insights";
+        button.textContent = "Close Insights";
         console.log("Switched to AI Insights");
     }
 }
 
-
-</script>
-
-
-<!-- Theme & Panel Reload -->
-<script>
+// Theme & Panel Reload - Django functionality
 document.addEventListener('DOMContentLoaded', function() {
     console.log('=== INITIAL MODE LOADING ===');
     console.log('Raw active_mode value:', '{{ active_mode }}');
@@ -431,16 +500,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-  
-        <!-- htmx.ajax('POST', '{% url "journal:_mode_banner" %}', {
-                values: { slug: mode_slug },
-                target: '#mode-banner-wrapper',
-                swap: 'innerHTML'
-          }); 
-        htmx.ajax('POST', '{% url "journal:_entry_filter" %}', {
-          values: { slug: mode_slug },
-          target: '#entry-filter-wrapper',
-          swap: 'innerHTML'
-      }); -->
-      </div>
+
 {% endblock %}

@@ -26,7 +26,7 @@ from datetime import datetime, time
 from pytz import timezone, UTC
 from django.shortcuts import get_object_or_404
 from .utils import get_current_mode, set_mode_for_user, get_mode_styler_context, get_active_mode, get_synthesis_prompt, \
-    get_daily_content
+    get_daily_content, get_header_config
 from .mode_styler import get_feature_styles
 from .context_processors import active_mode
 from django.views.decorators.http import require_POST
@@ -281,11 +281,13 @@ def _mode_features(request):
 
     # Use the mode's slug for styling functions
     mode_styler = get_mode_styler_context(active_mode)
+    mode_header = get_header_config(active_mode)
     feature_styles = get_feature_styles(active_mode)
     feature_content = get_daily_content(request, mode_slug)
     print(f"DEBUG: Resolved active_mode features = {active_mode}")
     return render(request, "journal/modes/_mode_features.html", {
         "mode_styler": mode_styler,
+        'mode_header': mode_header,
         'selected_mode': mode,
         'feature_styles': feature_styles,
         'feature_content': feature_content
@@ -581,3 +583,12 @@ def entry_detail(request, pk):
 # ('Spiritual', 'Connect daily life to deeper meaning, inner wisdom, and a sense of the sacred.', false, true, 'spiritual', NOW());
 #
 # SELECT * FROM django_cache;
+# Creative
+# Exploratory
+# Medical
+# Spiritual
+# Philosophical
+# Mystical
+# Exploratory
+# Visionary
+# Productive

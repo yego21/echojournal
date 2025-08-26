@@ -1,4 +1,31 @@
+
+
 {% if active_mode.slug %}
+<div class="flex items-center space-x-4 mb-8">
+        <div class="w-12 h-12 bg-gradient-to-br from-white-500 to-black-600 rounded-2xl flex items-center justify-center">
+    <svg class="w-6 h-6 text-grey" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        {{ mode_header.svg | safe }}
+    </svg>
+</div>
+
+        <div class="flex-1">
+            <div class="flex items-center space-x-2 mb-1">
+                <h3 id="content-title" class="text-2xl font-bold text-gray-900">
+                    {{ mode_header.title }}
+                </h3>
+                <span class="text-xl">{{ mode_header.icon }}</span>
+            </div>
+            <p class="text-sm text-gray-600">{{ mode_header.description }}</p>
+        </div>
+        
+        <!-- Mode indicator -->
+        <div class="hidden sm:flex items-center px-3 py-1 rounded-full bg-gray-100">
+            <div class="w-2 h-2 {{ header_config.icon_bg }} rounded-full mr-2"></div>
+            <span class="text-xs font-medium text-gray-600 uppercase tracking-wide">
+                {{ active_mode.slug }} mode
+            </span>
+        </div>
+        </div>
   <!-- Question -->   
  <div class="{{ feature_styles.question_container }}">
   <!-- Question -->
