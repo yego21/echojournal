@@ -25,8 +25,7 @@ from django.utils import timezone as dj_timezone
 from datetime import datetime, time
 from pytz import timezone, UTC
 from django.shortcuts import get_object_or_404
-from .utils import get_current_mode, set_mode_for_user, get_mode_styler_context, get_active_mode, get_synthesis_prompt, \
-    get_daily_content, get_header_config
+from .utils import get_current_mode, set_mode_for_user, get_mode_styler_context, get_active_mode, get_synthesis_prompt, get_daily_content, get_header_config
 from .mode_styler import get_feature_styles
 from .context_processors import active_mode
 from django.views.decorators.http import require_POST
@@ -35,202 +34,22 @@ from django.utils.dateparse import parse_date
 
 
 
-@login_required
-def load_insight_panel(request):
-    return render(request, 'journal/ai_insights/insight_panel.html')
-
-@login_required
-def load_insight_tab(request, tab_name):
-    # You can route logic here later, for now just echo the tab
-    return render(request, f'journal/ai_insights/_{tab_name}.html')
 
 
-def generate_summary_by_mode_and_type(entries, mode_slug, synthesis_type):
-    client = Groq(api_key=settings.GROQ_API_KEY)
-
-    # Get the right prompt for mode + type combination
-    prompt = get_synthesis_prompt(mode_slug, synthesis_type)
-
-    # Add entries to prompt
-    for entry in entries:
-        prompt += f"\nDate: {entry.created_at.strftime('%Y-%m-%d %H:%M')}\n"
-        prompt += f"Entry: {entry.content}\n"
-
-    response = client.chat.completions.create(
-        model="compound-beta-mini",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.7,
-        max_tokens=500,
-    )
-
-    return response.choices[0].message.content.strip()
 
 
-@require_GET
-def synthesize_entries(request):
-    # Get parameters
-    synthesis_type = request.GET.get('type', 'reflect')  # Default to reflect
-    mode_slug = get_active_mode(request)  # Get current mode
-
-    entries = JournalEntry.objects.filter(user=request.user).order_by('-created_at')
-    if not entries:
-        return HttpResponse("No entries yet to summarize.", status=400)
-
-    # Generate based on mode + type combination
-    summary = generate_summary_by_mode_and_type(entries, mode_slug, synthesis_type)
-
-    return render(request, 'journal/ai_insights/_synthesis.html', {
-        'synthesis': summary,
-        'synthesis_type': synthesis_type,
-        'mode': mode_slug
-    })
-
-
-def extract_tags(entry):
-    client = Groq(api_key=settings.GROQ_API_KEY)
-
-    prompt = (
-        "You are a journaling assistant. Based on the following entry, return a concise list of emotional or thematic "
-        "tags that reflect the core content. Examples: 'burnout', 'inspiration', 'routine', 'loneliness'. "
-        "Only return a JSON list of tags, like: [\"tag1\", \"tag2\", ...]\n\n"
-    )
-
-    prompt += f"- {entry.content.strip()}\n"
-
-    response = client.chat.completions.create(
-        model="compound-beta-mini",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.5,
-        max_tokens=150,
-    )
-
-    try:
-        tag_list = json.loads(response.choices[0].message.content.strip())
-        return tag_list[:2] if isinstance(tag_list, list) else []
-    except Exception as e:
-        print("Tag extraction failed:", e)
-        return []
 
 
  # Assumes you have a helper to tag entries
 
-def get_session_timezone(request):
-    tzname = request.session.get('timezone')
-    if tzname in pytz.all_timezones:
-        return timezone(tzname)
-    return UTC
 
 
 
 
 
 
-# 1. MAIN DASHBOARD VIEW
-@login_required
-def journal_dashboard(request):
-    print("===== DASHBOARD DEBUG START =====")
-
-    # Debug session state
-    session_selected_mode_slug = request.session.get("selected_mode_slug")
-    session_preferred_mode_slug = getattr(request.user.userprofile.preferred_mode, "slug", None)
-
-    print(f"DEBUG: Session 'selected_mode_slug' = {session_selected_mode_slug}")
-    print(f"DEBUG: UserProfile 'preferred_mode_slug' = {session_preferred_mode_slug}")
-
-    # Determine active_mode
-    active_mode = get_active_mode(request)
-    if not active_mode:
-        # Fallback to preferred mode or default
-        active_mode = session_preferred_mode_slug or JournalMode.objects.get(slug='default')
-    print(f"DEBUG: Resolved active_mode = {active_mode} (id={getattr(active_mode, 'id', None)})")
-
-    # Prepare other data
-    form = JournalEntryForm()
-    today = now().date()
-    entries_today = JournalEntry.objects.filter(user=request.user, created_at__date=today).order_by('-created_at')
-    can_add = entries_today.count() < 3
-    modes = JournalMode.objects.filter(is_active=True).order_by('name')
-    mode_styler = get_mode_styler_context(active_mode)
 
 
-    print(f"DEBUG: Entries today count = {entries_today.count()}")
-    print(f"DEBUG: Can add more entries today? = {can_add}")
-    print("===== DASHBOARD DEBUG END =====")
-
-    return render(request, 'dashboard.html', {
-        'form': form,
-        'entries': entries_today,
-        'active_mode': active_mode,
-        'modes': modes,
-        'can_add': can_add,
-        'user_timezone': str(get_session_timezone(request)),
-        'mode_styler': mode_styler,
-    })
-
-
-
-@login_required
-def mode_selector(request):
-    modes = JournalMode.objects.filter(is_active=True).order_by('name')
-    print('Current Mode:' + str(get_current_mode(request)))
-    return render(request, "journal/partials/_mode_selector.html", {'modes': modes})
-
-
-@login_required
-def mode_explorer(request):
-    modes = JournalMode.objects.all()
-    active_mode = get_active_mode(request)
-    mode_styler = get_mode_styler_context(active_mode)
-    return render(request, "journal/modes/mode_explorer.html", {
-        "modes": modes,
-        "active_mode": active_mode,
-        'mode_styler': mode_styler,
-    })
-
-
-@login_required
-@require_POST
-def switch_mode_dynamic(request):
-    mode_slug = request.POST.get('mode_slug')
-    if not mode_slug:
-        return HttpResponseBadRequest("No mode selected")
-
-    try:
-        mode = JournalMode.objects.get(slug=mode_slug, is_active=True)
-        # Update session only
-        request.session['selected_mode_slug'] = mode.slug
-
-        # Get updated context
-        mode_styler = get_mode_styler_context(mode_slug)
-
-        # Return multiple HTMX updates
-        response = HttpResponse()
-        response['HX-Trigger-After-Swap'] = json.dumps({
-            "updateTheme": {
-                "mode_slug": mode_slug,
-                # "background_class": mode_styler['background_class'],
-                "mode_name": mode.name
-            }
-        })
-        return response
-
-    except JournalMode.DoesNotExist:
-        return HttpResponseBadRequest("Invalid mode")
-
-
-@login_required
-def set_selected_mode(request, mode_slug):
-    mode = get_object_or_404(JournalMode, slug=mode_slug)
-    request.session['selected_mode_slug'] = mode.slug
-    return redirect("journal:mode_explorer")
-
-@login_required
-def set_preferred_mode(request, mode_slug):
-    mode = get_object_or_404(JournalMode, slug=mode_slug)
-    userprofile = request.user.userprofile
-    userprofile.preferred_mode = mode
-    userprofile.save()
-    return redirect("journal:mode_explorer")
 
 # @login_required
 # def mode_explorer(request):
@@ -262,36 +81,6 @@ def _mode_banner(request):
     })
 
 
-@login_required
-@require_POST
-def _mode_features(request):
-    # Get the active mode from context processor (your logic for new sessions, etc.)
-    active_mode = get_active_mode(request)
-
-    # Handle POST override - this should OVERRIDE the active mode temporarily
-    mode_slug = request.POST.get("slug")
-    if mode_slug:
-        # User is explicitly switching modes via POST
-        mode = get_object_or_404(JournalMode, slug=mode_slug)
-        # Optionally update session to remember this choice
-        request.session['selected_mode_id'] = mode.id
-    else:
-        # Use your active mode logic (preferred mode for new sessions, etc.)
-        mode = active_mode or get_object_or_404(JournalMode, slug='default')
-
-    # Use the mode's slug for styling functions
-    mode_styler = get_mode_styler_context(active_mode)
-    mode_header = get_header_config(active_mode)
-    feature_styles = get_feature_styles(active_mode)
-    feature_content = get_daily_content(request, mode_slug)
-    print(f"DEBUG: Resolved active_mode features = {active_mode}")
-    return render(request, "journal/modes/_mode_features.html", {
-        "mode_styler": mode_styler,
-        'mode_header': mode_header,
-        'selected_mode': mode,
-        'feature_styles': feature_styles,
-        'feature_content': feature_content
-    })
 
 
 @login_required
@@ -327,61 +116,25 @@ def _entry_filter(request):
         'selected_mode': mode,
     })
 
-@require_POST
-@login_required
-def set_journal_mode(request):
-    mode_slug = request.POST.get('mode')
-    try:
-        mode = JournalMode.objects.get(slug=mode_slug)
-        set_mode_for_user(request, mode)
-        return JsonResponse({'status': 'success', 'mode': mode.name})
-    except JournalMode.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': 'Invalid mode'})
+# @require_POST
+# @login_required
+# def set_journal_mode(request):
+#     mode_slug = request.POST.get('mode')
+#     try:
+#         mode = JournalMode.objects.get(slug=mode_slug)
+#         set_mode_for_user(request, mode)
+#         return JsonResponse({'status': 'success', 'mode': mode.name})
+#     except JournalMode.DoesNotExist:
+#         return JsonResponse({'status': 'error', 'message': 'Invalid mode'})
 
-def journal_entry_by_mode(request, slug):
-    mode = get_object_or_404(JournalMode, slug=slug)
-    request.session['selected_mode'] = mode.slug  # or mode.id if you prefer
-    return redirect('journal:journal_dashboard')  # We'll adapt the entry view soon
+# def journal_entry_by_mode(request, slug):
+#     mode = get_object_or_404(JournalMode, slug=slug)
+#     request.session['selected_mode'] = mode.slug  # or mode.id if you prefer
+#     return redirect('journal:journal_dashboard')  # We'll adapt the entry view soon
 
 # 2. NEW JOURNAL ENTRY VIEW (HTMX endpoint)
 
-@require_POST
-@login_required
-def submit_journal_entry(request):
-    if request.method != "POST":
-        return JsonResponse({"error": "Invalid request."}, status=400)
 
-    today = now().date()
-    entries_today = JournalEntry.objects.filter(user=request.user, created_at__date=today)
-
-    if entries_today.count() >= 3:
-        return JsonResponse({
-            "error": "Daily entry limit reached."
-        }, status=400)
-
-    form = JournalEntryForm(request.POST)
-    if form.is_valid():
-        entry = form.save(commit=False)
-        entry.user = request.user
-        entry.save()
-
-        # Extract tags
-        extracted_tags = extract_tags(entry)
-
-        for tag_name in extracted_tags:
-            tag_obj, created = Tag.objects.get_or_create(name=tag_name)
-            entry.tags.add(tag_obj)
-
-        return JsonResponse({
-            "success": True,
-            "message": "Journal entry saved successfully!",
-            "entry_id": entry.id
-        })
-    else:
-        return JsonResponse({
-            "error": "Please correct the errors in the form.",
-            "form_errors": form.errors
-        }, status=400)
 # def submit_journal_entry(request):
 #     if request.method != "POST":
 #         return HttpResponseBadRequest("Invalid request.")
@@ -428,23 +181,23 @@ def submit_journal_entry(request):
 #         return HttpResponse(error_html, status=400)
 
 
-@login_required
-def same_day_entries(request):
-    today = now().date()
-
-    entries = JournalEntry.objects.filter(
-        user=request.user,
-        created_at__date=today
-    ).order_by('-created_at')
-
-    can_add = entries.count() < 3
-
-    html = render_to_string("journal/_entries.html", {
-        'entries': entries,
-        'can_add': can_add,
-    }, request=request)
-
-    return HttpResponse(html)
+# @login_required
+# def same_day_entries(request):
+#     today = now().date()
+#
+#     entries = JournalEntry.objects.filter(
+#         user=request.user,
+#         created_at__date=today
+#     ).order_by('-created_at')
+#
+#     can_add = entries.count() < 3
+#
+#     html = render_to_string("journal/_entries.html", {
+#         'entries': entries,
+#         'can_add': can_add,
+#     }, request=request)
+#
+#     return HttpResponse(html)
 
 
 
@@ -487,84 +240,16 @@ def same_day_entries(request):
 #     })
 
 
-def search_modal(request):
-    # Lightweight modal with two date pickers
-    return render(request, "journal/search/_search_modal.html")
-
-def search_results(request):
-    start_raw = request.GET.get("start")
-    end_raw   = request.GET.get("end")
-    tag_id    = request.GET.get("tag_filter")  # new
-
-    start_date = parse_date(start_raw) if start_raw else None
-    end_date   = parse_date(end_raw) if end_raw else None
-
-    error = None
-    if not start_date or not end_date:
-        error = "Pick both start and end dates."
-    elif start_date > end_date:
-        error = "Start date cannot be after end date."
-
-    entries = []
-    if not error:
-        qs = (
-            JournalEntry.objects
-            .filter(user=request.user, created_at__date__range=(start_date, end_date))
-            .annotate(day=TruncDate("created_at"))
-            .order_by("-day", "-created_at")
-        )
-        if tag_id:  # only apply if selected
-            qs = qs.filter(tags__id=tag_id)
-        entries = qs
-
-    ctx = {
-        "entries": entries,
-        "start_date": start_date,
-        "end_date": end_date,
-        "tag_id": tag_id,   # so template knows what's selected
-        "error": error,
-        "tags": Tag.objects.all(),  # for dropdown
-    }
-    return render(request, "journal/search/_search_results.html", ctx)
 
 
-def filter_results_by_tag(request):
-    """Handle tag filtering within modal"""
-    tag_id = request.GET.get("tag_filter")
-    start_date_str = request.GET.get("start_date")
-    end_date_str = request.GET.get("end_date")
 
-    # Parse dates
-    start_date = parse_date(start_date_str) if start_date_str else None
-    end_date = parse_date(end_date_str) if end_date_str else None
 
-    entries = JournalEntry.objects.filter(user=request.user)
 
-    # Apply date filter
-    if start_date and end_date:
-        entries = entries.filter(created_at__date__range=(start_date, end_date))
 
-    # Apply tag filter
-    if tag_id:
-        try:
-            entries = entries.filter(tags__id=int(tag_id))
-        except (ValueError, TypeError):
-            pass
 
-    entries = entries.annotate(day=TruncDate("created_at")).order_by("-day", "-created_at")
 
-    ctx = {
-        "entries": entries,
-        "tag_id": tag_id,
-        "start_date": start_date,
-        "end_date": end_date,
-        "tags": Tag.objects.all(),
-    }
-    return render(request, "journal/search/_search_result_by_tag_mood.html", ctx)
 
-def entry_detail(request, pk):
-    entry = get_object_or_404(JournalEntry, pk=pk, user=request.user)
-    return render(request, "journal/search/_entry_detail_modal.html", {"entry": entry})
+
 
 
 

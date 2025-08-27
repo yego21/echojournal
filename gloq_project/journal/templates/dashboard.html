@@ -31,6 +31,77 @@
     backdrop-filter: blur(10px);
     background: rgba(255, 255, 255, 0.9);
 }
+
+/* Drop Note Card Border Animation */
+.drop-note-card {
+    position: relative;
+}
+
+.drop-note-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 1.5rem; /* Match rounded-3xl */
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    opacity: 0;
+    animation: borderPulse 4s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes borderPulse {
+    0%, 85%, 100% { 
+        opacity: 0;
+        border-color: rgba(99, 102, 241, 0);
+    }
+    5%, 80% { 
+        opacity: 1;
+        border-color: rgba(99, 102, 241, 0.6);
+    }
+    40% {
+        opacity: 0.7;
+        border-color: rgba(139, 92, 246, 0.5);
+    }
+}
+
+/* Running border light effect */
+.drop-note-card::after {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    border-radius: 1.6rem;
+    border: 2px solid transparent;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        transparent 40%, 
+        rgba(99, 102, 241, 0.8) 50%, 
+        transparent 60%, 
+        transparent 100%) border-box;
+    mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    background-size: 200% 100%;
+    opacity: 0;
+    animation: runningBorder 5s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes runningBorder {
+    0%, 85%, 100% {
+        opacity: 0;
+        background-position: -200% 0;
+    }
+    10%, 80% {
+        opacity: 1;
+        background-position: 200% 0;
+    }
+}
 </style>
 
    
@@ -48,19 +119,14 @@
             <!-- Left Column - Main Content (2/3 width) -->
             <div class="xl:col-span-2 space-y-8">
 
-                <!-- New Entry Card - Major visual upgrade with Django functionality -->
-                <div class="card-hover bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 overflow-hidden fade-in">
+                <!-- 🔹 Top Input Card - Drop a Note -->
+                <div class="card-hover bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 overflow-hidden fade-in drop-note-card">
                     <div class="p-8">
                         <div class="flex items-center justify-between mb-6">
                             <div class="flex items-center space-x-4">
-                                <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center shadow-md">
-                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                                    </svg>
-                                </div>
                                 <div>
-                                    <h2 class="text-xl font-bold text-gray-900">New Entry</h2>
-                                    <p class="text-sm text-gray-600">Capture your thoughts and ideas</p>
+                                    <h2 class="text-xl font-bold text-gray-900">Drop a Note</h2>
+                                    <p class="text-sm text-gray-500 italic">Scribbles, fragments, or any thought</p>
                                 </div>
                             </div>
                             
@@ -68,8 +134,7 @@
                                 <div class="flex items-center space-x-2">
                                     <svg class="w-5 h-5 transition-transform group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                                    </svg>
-                                    <span class="font-semibold">Create Entry</span>
+                                    </svg>                                    
                                 </div>
                             </button>
                         </div>
@@ -84,78 +149,138 @@
                 <!-- Form Alerts Container -->
                 <div id="form-alerts"></div>
 
-                <!-- Mode Features Card - Enhanced visual hierarchy with Django functionality -->
+                <!-- Mode Features Card - Enhanced visual hierarchy with Django functionality (PRESERVED) -->
                 <div class="card-hover {{ mode_styler.feature_card_class|default:'bg-white/80 backdrop-blur-sm' }} rounded-3xl shadow-xl border border-white/20 overflow-hidden fade-in">
-    <!-- Header Section -->
-    <div class="px-8 pt-6 pb-4 border-b border-gray-100/50">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-               
-                <h3 class="text-xl font-semibold text-gray-900" id="content-title">Mode Features</h3>
-            </div>
-            
-            <!-- Optional: Status indicator -->
-            <div class="flex items-center space-x-2">
-                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Active</span>
-            </div>
-        </div>
-    </div>
+                    <!-- Header Section -->
+                    <div class="px-8 pt-6 pb-4 border-b border-gray-100/50">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-lg flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-900" id="content-title">Active Mode</h3>
+                                    <p class="text-sm text-gray-500 italic">Each lens casts a different light on your notes</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Optional: Status indicator -->
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                                <span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Active</span>
+                            </div>
+                        </div>
+                    </div>
 
-    <!-- Content Section -->
-    <div class="p-8">
-        <!-- Dynamic Content Container -->
-        <div id="dynamic-content" class="space-y-4">
-            <!-- Mode-specific content will load here -->
-            <div id="mode-features">
-                <!-- Initial mode features will be loaded via JavaScript -->
-            </div>
-        </div>
-    </div>
-</div>
+                    <!-- Content Section -->
+                    <div class="p-8">
+                        <!-- Dynamic Content Container -->
+                        <div id="dynamic-content" class="space-y-4">
+                            <!-- Mode-specific content will load here -->
+                            <div id="mode-features">
+                                <!-- Initial mode features will be loaded via JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             </div>
 
             <!-- Right Column - Sidebar -->
             <div class="space-y-8">
 
-                <!-- AI Insights Card - Enhanced with Django functionality -->
-                <div class="card-hover bg-gradient-to-br from-indigo-50 via-purple-50 to-blue-50 rounded-3xl shadow-xl border border-indigo-200/50 overflow-hidden fade-in">
-                    <div class="p-8">
-                        <div class="flex items-center space-x-4 mb-6">
-                            <div class="relative">
-                                <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                <!-- 🔹 Stream (Recent Notes) - Moved to Right Panel -->
+                <div class="card-hover bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 overflow-hidden fade-in">
+                    <div class="px-6 pt-6 pb-4 border-b border-gray-100/50">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-lg flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
                                     </svg>
                                 </div>
-                                <!-- Animated pulse effect -->
-                                <div class="absolute inset-0 w-12 h-12 bg-indigo-400 rounded-2xl animate-ping opacity-20"></div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900">Stream</h3>
+                                    <p class="text-xs text-gray-500 italic">Your latest drops, flowing in time</p>
+                                </div>
                             </div>
-                            <div>
-                                <h3 class="text-xl font-bold text-gray-900">AI Insights</h3>
-                                <p class="text-sm text-gray-600">Discover patterns in your entries</p>
+                            
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                                <span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Live</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-6">
+                        <div id="stream-content" class="space-y-3">
+                            <!-- Recent entries will be loaded here -->
+                            <div class="text-center py-6 text-gray-500">
+                                <svg class="w-10 h-10 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                                </svg>
+                                <p class="text-sm">Your stream flows here as you drop notes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🔹 Refractions (AI Insights) - Adjacent Design -->
+                <div class="card-hover bg-gradient-to-br from-indigo-50 via-purple-50 to-blue-50 rounded-3xl shadow-xl border border-indigo-200/50 overflow-hidden fade-in">
+                    
+                    <!-- Refractions Header with Toggle Button -->
+                    <div class="px-6 pt-6 pb-4 border-b border-indigo-200/30">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="relative">
+                                    <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                        </svg>
+                                    </div>
+                                    <!-- Animated pulse effect -->
+                                    <div class="absolute inset-0 w-10 h-10 bg-indigo-400 rounded-xl animate-ping opacity-20"></div>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-900">Refractions</h3>
+                                    <p class="text-xs text-gray-500 italic">Patterns refracted through your active Mode</p>
+                                </div>
                             </div>
                         </div>
                         
                         <button id="insight_button"
                             onclick="toggleAIInsights()"
-                            class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white py-4 px-6 rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 font-semibold">
-                            Open Insights
+                            class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white py-3 px-5 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 font-semibold text-sm">
+                            Open Refractions
                         </button>
+                    </div>
+
+                    <!-- Refractions Content Area -->
+                    <div id="refractions-content" class="p-6 min-h-[200px]">
+                        <div class="text-center py-8 text-indigo-400">
+                            <svg class="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                            </svg>
+                            <p class="text-sm">Click above to reveal refractions</p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Quick Actions - Major visual upgrade with Django functionality -->
+                <!-- 🔹 Tools (Quick Actions) - Renamed and Enhanced -->
                 <div class="card-hover bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 overflow-hidden fade-in">
                     <div class="p-8">
                         <div class="flex items-center space-x-3 mb-6">
                             <div class="w-10 h-10 bg-gradient-to-br from-gray-400 to-gray-600 rounded-xl flex items-center justify-center shadow-md">
                                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
                                 </svg>
                             </div>
-                            <h3 class="text-xl font-bold text-gray-900">Quick Actions</h3>
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-900">Tools</h3>
+                                <p class="text-sm text-gray-500 italic">Tags, searches, traces, and exports at hand</p>
+                            </div>
                         </div>
                         
                         <div class="grid grid-cols-3 gap-4">
@@ -191,7 +316,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                                         </svg>
                                     </div>
-                                    <span class="text-xs font-semibold text-gray-700 group-hover:text-gray-900">Stats</span>
+                                    <span class="text-xs font-semibold text-gray-700 group-hover:text-gray-900">Traces</span>
                                 </div>
                             </button>
 
@@ -238,7 +363,7 @@
                     </div>
                 </div>
 
-                <!-- Daily Quote - Enhanced -->
+                <!-- 🔹 Found Fragment (Quote Box) - Enhanced -->
                 <div class="card-hover bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 rounded-3xl shadow-xl border border-indigo-200/50 overflow-hidden fade-in">
                     <div class="p-8">
                         <div class="flex items-start space-x-4">
@@ -250,6 +375,10 @@
                                 </div>
                             </div>
                             <div>
+                                <div class="mb-4">
+                                    <h3 class="text-lg font-bold text-gray-900">Found Fragment</h3>
+                                    <p class="text-xs text-gray-500 italic">A passing line, ambient to your mode</p>
+                                </div>
                                 <p class="text-gray-800 italic mb-4 text-lg leading-relaxed">
                                     "The way to get started is to quit talking and begin doing."
                                 </p>
@@ -369,12 +498,13 @@ document.body.addEventListener('htmx:afterRequest', function(event) {
                 // Reset the plus icon
                 const icon = document.querySelector('#toggle-entry svg');
                 if (icon) icon.style.transform = 'rotate(0deg)';
-                
-                // Refresh entry list if it exists
-                const entryList = document.getElementById('entry-list');
-                if (entryList) {
-                    htmx.ajax('GET', '{% url "journal:same_day_entries" %}', {
-                        target: '#entry-list',
+                            
+
+                // Refresh stream content after new entry
+                const streamContent = document.getElementById('stream-content');
+                if (streamContent) {
+                    htmx.ajax('GET', '{% url "journal:stream_content" %}', {
+                        target: '#stream-content',
                         swap: 'innerHTML'
                     });
                 }
@@ -404,13 +534,14 @@ document.body.addEventListener('htmx:afterRequest', function(event) {
     }
 });
 
-// Function to toggle AI Insights
+// Function to toggle AI Insights (now called Refractions)
 let showingInsights = false;
 let cachedModeFeaturesHTML = null;
 
 function toggleAIInsights() {
     const contentTitle = document.getElementById('content-title');
     const dynamicContent = document.getElementById('dynamic-content');  
+    const refractionsContent = document.getElementById('refractions-content');
     const button = document.getElementById('insight_button');
 
     if (!cachedModeFeaturesHTML) {
@@ -423,22 +554,40 @@ function toggleAIInsights() {
     }
 
     if (showingInsights) {
-        // Restore cached Mode Features
-        contentTitle.textContent = 'Mode Features';        
+        // Restore cached Mode Features in main panel
+        contentTitle.textContent = 'Active Mode';        
         dynamicContent.innerHTML = '<div id="mode-features">' + cachedModeFeaturesHTML + '</div>';
+        
+        // Clear refractions content and show placeholder
+        refractionsContent.innerHTML = `
+            <div class="text-center py-8 text-indigo-400">
+                <svg class="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                </svg>
+                <p class="text-sm">Click above to reveal refractions</p>
+            </div>
+        `;
+        
         showingInsights = false;
-        button.textContent = "Open Insights";
+        button.textContent = "Open Refractions";
         console.log("Switched back to Mode Features");
     } else {
-        // Load AI Insights (via HTMX)
-        contentTitle.textContent = 'AI Insights';
+        // Load AI Insights in both locations
+        contentTitle.textContent = 'Refractions';
         htmx.ajax('GET', '{% url "journal:load_insight_panel" %}', {
             target: '#dynamic-content',
             swap: 'innerHTML'
         });
+        
+        // Also load in refractions content area
+        htmx.ajax('GET', '{% url "journal:load_insight_panel" %}', {
+            target: '#refractions-content',
+            swap: 'innerHTML'
+        });
+        
         showingInsights = true;
-        button.textContent = "Close Insights";
-        console.log("Switched to AI Insights");
+        button.textContent = "Close Refractions";
+        console.log("Switched to AI Insights (Refractions)");
     }
 }
 
@@ -473,9 +622,18 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Final container classes:', container.className);
     }
 
+    // 3. Load initial stream content
+    const streamContent = document.getElementById('stream-content');
+    if (streamContent) {
+        htmx.ajax('GET', '{% url "journal:stream_content" %}', {
+            target: '#stream-content',
+            swap: 'innerHTML'
+        });
+    }
+
     console.log('=== INITIAL MODE LOADING COMPLETE ===');
 
-    // 3. Set up event listener for dropdown changes
+    // 4. Set up event listener for dropdown changes
     document.body.addEventListener('updateTheme', function(event) {
         console.log('=== DROPDOWN CHANGE EVENT ===');
         console.log('updateTheme event fired:', event.detail);

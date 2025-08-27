@@ -1,36 +1,37 @@
 from django.urls import path
 from . import views
-
+from .views.dashboard_views import journal_dashboard
+from .views.mode_views import mode_explorer, _mode_features, mode_selector, set_selected_mode, set_preferred_mode, switch_mode_dynamic
+from .views.search_views import search_modal, search_results, filter_results_by_tag, entry_detail
+from .views.stream_views import stream_content
+from .views.refraction_views import synthesize_entries, load_insight_panel, load_insight_tab
+from .views.entry_views import submit_journal_entry
 
 app_name = "journal"
 
 urlpatterns = [
-    path('', views.journal_dashboard, name='journal_dashboard'),
-    path('entries/', views.same_day_entries, name='same_day_entries'),
-    path('entries/new/', views.submit_journal_entry, name='new_journal_entry'),
-    path('synthesize/', views.synthesize_entries, name='synthesize_entries'),
-    # path('fetch-entries/', views.fetch_entries_by_range, name='fetch_entries_by_range'),
+    # --- Dashboard & Entries ---
+    path("", journal_dashboard, name="journal_dashboard"),
+    path("entries/new/", submit_journal_entry, name="new_journal_entry"),
+    path("entry/<int:pk>/", entry_detail, name="entry_detail"),
+    path("synthesize/", synthesize_entries, name="synthesize_entries"),
 
+    # --- Modes & Preferences ---
+    path("modes/", mode_explorer, name="mode_explorer"),
+    path("_mode_features/", _mode_features, name="_mode_features"),
+    path("set-selected-mode/<mode_slug>/", set_selected_mode, name="set_selected_mode"),
+    path("set-preferred-mode/<mode_slug>/", set_preferred_mode, name="set_preferred_mode"),
+    path("switch-mode-dynamic/", switch_mode_dynamic, name="switch_mode_dynamic"),
 
+    # --- Insights ---
+    path("insight-panel/", load_insight_panel, name="load_insight_panel"),
+    path("insight-tab/<str:tab_name>/", load_insight_tab, name="load_insight_tab"),
 
-    path('modes/', views.mode_explorer, name='mode_explorer'),
-    path('_mode_banner/', views._mode_banner, name='_mode_banner'),
-    path("_synth_button/", views._synth_button, name="_synth_button"),
-    path("_entry_filter/", views._entry_filter, name="_entry_filter"),
-    path("_mode_features/", views._mode_features, name="_mode_features"),
-    path('mode/<slug:slug>/', views.journal_entry_by_mode, name='journal_entry_by_mode'),
-    path('mode-selector/', views.mode_selector, name='mode_selector'),
-    path("set-selected-mode/<mode_slug>/", views.set_selected_mode, name="set_selected_mode"),
-    path("set-preferred-mode/<mode_slug>/", views.set_preferred_mode, name="set_preferred_mode"),
-    path('switch-mode-dynamic/', views.switch_mode_dynamic, name='switch_mode_dynamic'),
-    path('insight-panel/', views.load_insight_panel, name='load_insight_panel'),
-    path('insight-tab/<str:tab_name>/', views.load_insight_tab, name='load_insight_tab'),
+    # --- Search ---
+    path("search/modal/", search_modal, name="search_modal"),
+    path("search/results/", search_results, name="search_results"),
+    path("search/results_by_tag/", filter_results_by_tag, name="filter_results_by_tag"),
 
-
-    path("search/modal/", views.search_modal, name="search_modal"),
-    path("search/results/", views.search_results, name="search_results"),
-    path("search/results_by_tag/", views.filter_results_by_tag, name="filter_results_by_tag"),
-
-    path("entry/<int:pk>/", views.entry_detail, name="entry_detail"),
-
+    # --- Streaming ---
+    path("stream/", stream_content, name="stream_content"),
 ]
