@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 import json
 from ..models import JournalMode
-from ..utils import get_active_mode, set_mode_for_user, get_mode_styler_context, get_header_config
+from ..utils import get_active_mode, set_mode_for_user, get_mode_styler_context, get_header_config, get_current_mode
 from ..mode_styler import get_feature_styles
 from ..utils import get_daily_content
 
