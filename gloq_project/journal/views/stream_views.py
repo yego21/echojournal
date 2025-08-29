@@ -4,7 +4,7 @@ from ..models import JournalEntry
 
 def stream_content(request):
     """Return the stream template with real entries"""
-    entries = JournalEntry.objects.filter(user=request.user).order_by('-created_at')[:5]
+    entries = JournalEntry.objects.filter(user=request.user).order_by('-created_at')[:2]
     return render(request, 'journal/stream/note_stream.html', {
         'entries': entries,
         'entries_count': entries.count(),
