@@ -1,0 +1,19 @@
+<div class="flex justify-center mb-auto">
+    <div class="flex items-center space-x-4 max-w-md">
+        <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-purple-600 rounded-2xl flex items-center justify-center">
+            <svg class="w-6 h-6 text-grey" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {{ mode_header.svg | safe }}
+            </svg>
+        </div>
+
+        <div class="flex-1">
+            <div class="flex items-center space-x-2 mb-1">
+                <h3 id="content-title" class="text-2xl font-bold text-gray-900">
+                    {{ mode_header.title }}
+                </h3>
+                <span class="text-xl">{{ mode_header.icon }}</span>
+            </div>
+            <p class="text-sm text-gray-600">{{ mode_header.description }}</p>
+        </div>    
+    </div>
+</div>

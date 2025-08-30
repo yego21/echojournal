@@ -5,6 +5,7 @@ from django.contrib.postgres.fields import ArrayField  # if using Postgres
 class JournalMode(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
+
     is_premium = models.BooleanField(default=False)  # For future paywalling
     is_active = models.BooleanField(default=True)    # In case some modes are disabled
     slug = models.SlugField(unique=True, blank=True)

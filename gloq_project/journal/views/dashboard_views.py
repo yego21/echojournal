@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
 from ..models import JournalEntry, JournalMode
 from ..forms import JournalEntryForm
-from ..utils import get_active_mode, get_mode_styler_context, get_session_timezone
+from ..utils import get_active_mode, get_mode_styler_context, get_session_timezone, get_header_config
 
 
 # @login_required
@@ -53,6 +53,7 @@ def journal_dashboard(request):
     can_add = entries_today.count() < 3
     modes = JournalMode.objects.filter(is_active=True).order_by('name')
     mode_styler = get_mode_styler_context(active_mode)
+    mode_header = get_header_config(active_mode)
 
 
     print(f"DEBUG: Entries today count = {entries_today.count()}")
@@ -67,4 +68,5 @@ def journal_dashboard(request):
         'can_add': can_add,
         'user_timezone': str(get_session_timezone(request)),
         'mode_styler': mode_styler,
+        'mode_header': mode_header,
     })
